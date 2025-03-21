@@ -75,6 +75,7 @@ database:
   secretName: ""
   host: "localhost"
   port: 5432
+  name: "auth"
   username: "postgres"
   password: "password"
 
