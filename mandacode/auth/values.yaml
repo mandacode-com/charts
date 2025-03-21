@@ -102,10 +102,10 @@ autoMailer:
 jwt:
   access:
     secretName: ""
-    expiresIn: 3600
+    expiresIn: "15m"
   refresh:
     secretName: ""
-    expiresIn: 86400
+    expiresIn: "7d"
   emailVerification:
     secretName: ""
-    expiresIn: 86400
+    expiresIn: "1d"
