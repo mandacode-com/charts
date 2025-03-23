@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: registry.mandacode.com/mandacode/accounts/auth-core
   pullPolicy: IfNotPresent
-  tag: "0.1.0"
+  tag: "0.1.1-rc1"
 
 imagePullSecrets:
   - name: regcred
@@ -72,12 +72,13 @@ core:
   configMapName: ""
 
 database:
-  secretName: ""
   host: "localhost"
   port: 5432
   name: "auth"
-  username: "postgres"
-  password: "password"
+  auth:
+    existingSecret: ""
+    username: "postgres"
+    password: "password"
 
 cors:
   origin: "https://auth.mandacode.com"
@@ -91,12 +92,15 @@ session:
   name: "SID"
   timeout: 86400
   storage:
-    secretName: ""
     host: "localhost"
     port: 6379
+    auth:
+      existingSecret: ""
+      password: ""
 
 autoMailer:
-  url: ""
+  host: "localhost"
+  port: 50051
   verifyEmailUrl: "https://auth.mandacode.com/auth/local/verify-email"
 
 jwt:
@@ -109,3 +113,15 @@ jwt:
   emailVerification:
     secretName: ""
     expiresIn: "1d"
+
+oauth:
+  existingSecret: ""
+  google:
+    endpoints:
+      token: "https://oauth2.googleapis.com/token"
+      profile: "https://www.googleapis.com/oauth2/v3/userinfo"
+      auth: "https://accounts.google.com/o/oauth2/v2/auth"
+    grantType: "authorization_code"
+    clientId: ""
+    clientSecret: ""
+    redirectUri: ""

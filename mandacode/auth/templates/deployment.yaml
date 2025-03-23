@@ -13,10 +13,11 @@ spec:
       {{- include "mandacode-auth.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        configmap.checksum: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "mandacode-auth.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -32,6 +33,41 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+      initContainers:
+        - name: prisma-migrate
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["npx", "prisma", "migrate", "deploy"]
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "core.configMapName" . }}
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "core.configMapName" . }}
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "core.configMapName" . }}
+                  key: DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "core.database.secretName" . }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "core.database.secretName" . }}
+                  key: password
+            - name: DATABASE_URL
+              value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -96,18 +132,11 @@ spec:
                   key: password
             - name: DATABASE_URL
               value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
-            - name: SESSION_STORAGE_HOST
+            - name: SESSION_STORAGE_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
-                  key: SESSION_STORAGE_HOST
-            - name: SESSION_STORAGE_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
-                  key: SESSION_STORAGE_PORT
-            - name: SESSION_STORAGE_URL
-              value: "redis://$(SESSION_STORAGE_HOST):$(SESSION_STORAGE_PORT)"
+                secretKeyRef:
+                  name: {{ include "core.session.storage.secretName" . }}
+                  key: redis-password
             - name: JWT_PUBLIC_ACCESS
               valueFrom:
                 secretKeyRef:
@@ -138,6 +167,16 @@ spec:
                 secretKeyRef:
                   name: {{ include "core.jwt.emailVerification.secretName" . }}
                   key: private
+            - name: OAUTH_GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "core.oauth.secretName" . }}
+                  key: google-client-id
+            - name: OAUTH_GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "core.oauth.secretName" . }}
+                  key: google-client-secret
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

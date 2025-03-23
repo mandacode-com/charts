@@ -79,14 +79,22 @@ Create the name of the service account to use
   Databse Secret Name
 */}}
 {{- define "core.database.secretName" -}}
-{{- default (printf "%s-core-db-secret" .Release.Name) .Values.database.secretName }}
+{{- if .Values.database.auth.existingSecret -}}
+{{ .Values.database.auth.existingSecret }}
+{{- else -}}
+{{ printf "%s-core-db-secret" .Release.Name }}
+{{- end }}
 {{- end }}
 
 {{/*
   Session Storage Secret Name
 */}}
 {{- define "core.session.storage.secretName" -}}
-{{- default (printf "%s-core-session-storage-secret" .Release.Name) .Values.session.storage.secretName }}
+{{- if .Values.session.storage.auth.existingSecret -}}
+{{ .Values.session.storage.auth.existingSecret }}
+{{- else -}}
+{{ printf "%s-core-db-secret" .Release.Name }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -107,4 +115,15 @@ Create the name of the service account to use
 */}}
 {{- define "core.jwt.emailVerification.secretName" -}}
 {{- default (printf "%s-core-jwt-email-secret" .Release.Name) .Values.jwt.emailVerification.secretName }}
+{{- end }}
+
+{{/*
+  OAuth2 Secret Name
+*/}}
+{{- define "core.oauth.secretName" -}}
+{{- if .Values.oauth.existingSecret -}}
+{{ .Values.oauth.existingSecret }}
+{{- else -}}
+{{ printf "%s-oauth-secret" .Release.Name }}
+{{- end }}
 {{- end }}
