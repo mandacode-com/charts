@@ -1,0 +1,15 @@
+dependencies:
+- name: mandacode-auth
+  repository: oci://registry.mandacode.com/mandacode/charts
+  version: 0.1.0
+- name: auto-mailer
+  repository: oci://registry.mandacode.com/mailer/charts
+  version: 0.1.0
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 16.4.14
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 20.10.0
+digest: sha256:5a5902ae16ecbea46505cd60d94c8fac61d8db81bec0753ec8b5a1191d0fab7d
+generated: "2025-03-23T17:29:11.223572325+09:00"
