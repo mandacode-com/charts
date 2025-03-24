@@ -38,7 +38,7 @@ routes:
       description: "Authentication service route"
 
   # saju.mandacode.com/api/core -> saju-core service in saju namespace
-  - name: saju-core
+  - name: saju
     enabled: true
     namespace: saju
     hosts:
@@ -47,7 +47,7 @@ routes:
       - "/api/core/*"
       - "/api/core"
     upstream:
-      serviceName: saju-core
+      serviceName: saju
       servicePort: 80
     plugins:
       - name: proxy-rewrite
@@ -61,7 +61,7 @@ routes:
           max_age: 3600
     labels:
       app: saju
-      component: core
+      component: saju
     annotations:
       description: "Saju core service route"
 
