@@ -99,6 +99,8 @@ spec:
               value: {{ .Values.openai.system_message.yearly.caution | default nil | quote }}
             - name: OPENAI_SYSTEM_MESSAGE_YEARLY_QUESTION_ANSWER
               value: {{ .Values.openai.system_message.yearly.questionAnswer | default nil | quote }}
+            - name: MANDACODE_VERIFY_TOKEN_ENDPOINT
+              value: {{ .Values.auth.mandacode.verifyTokenEndpoint | default nil | quote }}
 
       {{- with .Values.volumes }}
       volumes:

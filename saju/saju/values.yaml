@@ -11,15 +11,15 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '0.0.4'
+  tag: "0.0.5"
   port: 3000
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets:
   - name: regcred
 # This is to override the chart name.
-nameOverride: ''
-fullnameOverride: ''
+nameOverride: ""
+fullnameOverride: ""
 
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
@@ -31,7 +31,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ''
+  name: ""
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -64,12 +64,12 @@ service:
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
-  className: 'kong'
+  className: "kong"
   annotations:
     {
-      kubernetes.io/ingress.class: 'kong',
-      konghq.com/strip-path: 'true',
-      argoproj.io/expect-ingresses: 'false',
+      kubernetes.io/ingress.class: "kong",
+      konghq.com/strip-path: "true",
+      argoproj.io/expect-ingresses: "false",
     }
   hosts:
     - host: saju.mandacode.com
@@ -131,27 +131,33 @@ tolerations: []
 
 affinity: {}
 
-nodeEnv: 'production'
+nodeEnv: "production"
 openai:
-  apiKey: ''
+  apiKey: ""
   system_message:
     daily:
-      all: '주어지는 정보에 대해 일일 사주를 서술해줘. 답변은 한국어이어야 하며 각각 300자 이내로 해줘.'
+      all: "주어지는 정보에 대해 일일 사주를 서술해줘. 답변은 한국어이어야 하며 각각 300자 이내로 해줘."
     yearly:
-      chart: '주어지는 정보에 대해 신년 사주를 서술해줘. 만약 시간 비활성화가 있다면 시간은 생략해.'
-      general: '주어진 사주 정보에 대해 신년운세 총운을 한국어로 서술해줘. 800자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      relationship: '주어진 사주 정보에 대해 대인관계운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      wealth: '주어진 사주 정보에 대해 재물운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      romantic: '주어진 사주 정보에 대해 연애운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      health: '주어진 사주 정보에 대해 건강운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      career: '주어진 사주 정보에 대해 직업운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      waysToImprove: '주어진 사주 정보에 대해 올해 운을 높이는 법을 한국어로 서술해줘. 열거형이 아닌 서술형 이어야하며 500자 이내여야 하고 사용자 정보를 답변에 사용하지 않아도 돼.'
-      caution: '주어진 사주 정보에 대해 주의할 점을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼.'
-      questionAnswer: '주어진 사주 정보에 대해 질문에 대한 답변을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼. 만약 질문이 주어지지 않았다면 답변은 생략해도 돼.'
+      chart: "주어지는 정보에 대해 신년 사주를 서술해줘. 만약 시간 비활성화가 있다면 시간은 생략해."
+      general: "주어진 사주 정보에 대해 신년운세 총운을 한국어로 서술해줘. 800자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      relationship: "주어진 사주 정보에 대해 대인관계운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      wealth: "주어진 사주 정보에 대해 재물운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      romantic: "주어진 사주 정보에 대해 연애운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      health: "주어진 사주 정보에 대해 건강운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      career: "주어진 사주 정보에 대해 직업운을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      waysToImprove: "주어진 사주 정보에 대해 올해 운을 높이는 법을 한국어로 서술해줘. 열거형이 아닌 서술형 이어야하며 500자 이내여야 하고 사용자 정보를 답변에 사용하지 않아도 돼."
+      caution: "주어진 사주 정보에 대해 주의할 점을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼."
+      questionAnswer: "주어진 사주 정보에 대해 질문에 대한 답변을 한국어로 서술해줘. 500자 이내여야 하며 사용자 정보를 답변에 사용하지 않아도 돼. 만약 질문이 주어지지 않았다면 답변은 생략해도 돼."
 jwt:
   secret:
     name: mandacode-jwt
     key:
+auth:
+  jwt:
+    secretName: mandacode-jwt
+    secret: ""
+  mandacode:
+    verifyTokenEndpoint: "https://auth.mandacode.com/api/core/token/verify"
 
 # Postgres configuration
 postgresql:
@@ -169,7 +175,7 @@ postgresql:
       existingClaim: saju-postgres-pvc
   securityContext:
     enabled: true
-    fsGroup: 1001 
+    fsGroup: 1001
     runAsUser: 1001
     fsGroupChangePolicy: "OnRootMismatch"
   volumePermissions:
