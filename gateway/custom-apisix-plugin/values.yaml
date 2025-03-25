@@ -1,0 +1,7 @@
+nameOverride: ""
+fullnameOverride: ""
+
+plugins:
+  - name: rsa-jwt
+    file: rsa-jwt.lua
+    description: "RSA JWT verify plugin"

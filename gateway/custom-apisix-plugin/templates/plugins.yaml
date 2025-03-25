@@ -1,0 +1,12 @@
+{{- range .Values.plugins }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "chart.fullname" $ }}-plugin-{{ .name }}
+  labels:
+    {{- include "chart.labels" $ | nindent 4 }}
+data:
+  {{ .file }}: |
+{{ $.Files.Get (printf "plugins/%s" .file) | indent 4 }}
+{{- end }}
