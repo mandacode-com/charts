@@ -82,6 +82,21 @@ routes:
     annotations:
       description: "Grafana service route"
 
+customPlugins:
+  - name: rsa-jwt
+    description: "RSA JWT verify plugin"
+    targetRoutes:
+      - saju
+    config:
+      enable: true
+      force_auth: true
+      gateway_auth_header: "X-Gateway-Verified"
+      public_key: ""
+      hmac_secret: ""
+      exposed_payload_keys:
+        - uuid
+        - role
+
 ssl:
   - name: mandacode-tls
     enabled: true
