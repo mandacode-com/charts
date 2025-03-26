@@ -15,6 +15,22 @@ serviceAccount:
 
 # APISIX Routes configuration
 routes:
+  - name: apisix-dashboard
+    enabled: true
+    namespace: apisix
+    hosts:
+      - apisix.mandacode.com
+    paths:
+      - "/*"
+      - "/"
+    upstream:
+      serviceName: apisix-dashboard
+      servicePort: 80
+    labels:
+      app: apisix-dashboard
+      component: apisix
+    annotations:
+      description: "APISIX Dashboard route"
   # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
   - name: mandacode-accounts-mandacode-auth
     enabled: true
