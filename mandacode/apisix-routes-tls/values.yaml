@@ -26,7 +26,7 @@ routes:
       - "/"
     upstream:
       serviceName: argocd-server
-      servicePort: 443
+      servicePort: 80
     labels:
       app: argocd
       component: argocd
