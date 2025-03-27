@@ -16,7 +16,7 @@ serviceAccount:
 # APISIX Routes configuration
 routes:
   # registry.mandacode.com -> harbor service in registry namespace
-  - name: harbor
+  - name: harbor-ui
     enabled: true
     namespace: registry
     hosts:
@@ -25,13 +25,31 @@ routes:
       - "/*"
       - "/"
     upstream:
-      serviceName: harbor-portal
+      serviceName: harbor-core
       servicePort: 80
     labels:
-      app: harbor
+      app: harbor-core
       component: harbor
     annotations:
-      description: "Harbor service route"
+      description: "Harbor UI route"
+
+  # registry.mandacode.com/v2 -> harbor service in registry namespace
+  - name: harbor-registry
+    enabled: true
+    namespace: registry
+    hosts:
+      - registry.mandacode.com
+    paths:
+      - "/v2/*"
+      - "/v2"
+    upstream:
+      serviceName: harbor-registry
+      servicePort: 5000
+    labels:
+      app: harbor-registry
+      component: harbor
+    annotations:
+      description: "Harbor registry route"
 
   # # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
   # - name: mandacode-accounts-mandacode-auth
