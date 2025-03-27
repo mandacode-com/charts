@@ -123,6 +123,5 @@ ssl:
     secretName: mandacode-tls
     hosts:
       - argocd.mandacode.com
-      - registry.mandacode.com
       - auth.mandacode.com
       - saju.mandacode.com
