@@ -25,7 +25,7 @@ routes:
       - "/*"
       - "/"
     upstream:
-      serviceName: harbor
+      serviceName: harbor-portal
       servicePort: 80
     labels:
       app: harbor
