@@ -27,10 +27,6 @@ routes:
     upstream:
       serviceName: argocd-server
       servicePort: 80
-    plugins:
-      - name: proxy-rewrite
-        config:
-          regex_uri: ["^/api(/.*)?$", "$1"]
     labels:
       app: argocd-server
       component: argocd
