@@ -15,6 +15,24 @@ serviceAccount:
 
 # APISIX Routes configuration
 routes:
+  # argocd.mandacode.com -> argocd-server service in argocd namespace
+  - name: argocd
+    enabled: true
+    namespace: argocd
+    hosts:
+      - argocd.mandacode.com
+    paths:
+      - "/*"
+      - "/"
+    upstream:
+      serviceName: argocd-server
+      servicePort: 443
+    labels:
+      app: argocd
+      component: argocd
+    annotations:
+      description: "ArgoCD service route"
+
   # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
   - name: mandacode-accounts-mandacode-auth
     enabled: true
@@ -65,23 +83,6 @@ routes:
     annotations:
       description: "Saju core service route"
 
-  - name: grafana-route
-    enabled: true
-    namespace: cilium-monitoring
-    hosts:
-      - grafana.mandacode.com
-    paths:
-      - "/*"
-      - "/"
-    upstream:
-      serviceName: grafana
-      servicePort: 3000
-    labels:
-      app: monitoring
-      component: grafana
-    annotations:
-      description: "Grafana service route"
-
 customPlugins:
   - name: rsa-jwt
     description: "RSA JWT verify plugin"
@@ -103,6 +104,6 @@ ssl:
     namespace: default
     secretName: mandacode-tls
     hosts:
+      - argocd.mandacode.com
       - auth.mandacode.com
       - saju.mandacode.com
-      - grafana.mandacode.com
