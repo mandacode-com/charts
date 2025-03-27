@@ -77,6 +77,7 @@ routes:
       - name: proxy-rewrite
         config:
           headers:
+            X-Forwarded-Proto: https
             Authorization: "$http_authorization"
     annotations:
       description: "Harbor registry route"
