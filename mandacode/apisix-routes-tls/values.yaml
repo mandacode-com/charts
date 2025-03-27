@@ -15,24 +15,6 @@ serviceAccount:
 
 # APISIX Routes configuration
 routes:
-  # argocd.mandacode.com -> argocd-server service in argocd namespace
-  - name: argocd
-    enabled: true
-    namespace: argocd
-    hosts:
-      - argocd.mandacode.com
-    paths:
-      - "/*"
-      - "/"
-    upstream:
-      serviceName: argocd-server
-      servicePort: 80
-    labels:
-      app: argocd
-      component: argocd
-    annotations:
-      description: "ArgoCD service route"
-
   # # registry.mandacode.com -> harbor service in registry namespace
   # - name: harbor
   #   enabled: true
