@@ -33,28 +33,28 @@ routes:
     annotations:
       description: "ArgoCD server route"
 
-  # # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
-  # - name: mandacode-accounts-mandacode-auth
-  #   enabled: true
-  #   namespace: mandacode-accounts
-  #   hosts:
-  #     - auth.mandacode.com
-  #   paths:
-  #     - "/api/core/*"
-  #     - "/api/core"
-  #   upstream:
-  #     serviceName: mandacode-accounts-mandacode-auth
-  #     servicePort: 80
-  #   plugins:
-  #     - name: proxy-rewrite
-  #       config:
-  #         regex_uri: ["^/api/core(/.*)?$", "$1"]
-  #   labels:
-  #     app: mandacode-accounts
-  #     component: mandacode-auth
-  #   annotations:
-  #     description: "Authentication service route"
-  #
+  # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
+  - name: mandacode-accounts-mandacode-auth
+    enabled: true
+    namespace: mandacode-accounts
+    hosts:
+      - auth.mandacode.com
+    paths:
+      - "/api/core/*"
+      - "/api/core"
+    upstream:
+      serviceName: mandacode-accounts-mandacode-auth
+      servicePort: 80
+    plugins:
+      - name: proxy-rewrite
+        config:
+          regex_uri: ["^/api/core(/.*)?$", "$1"]
+    labels:
+      app: mandacode-accounts
+      component: mandacode-auth
+    annotations:
+      description: "Authentication service route"
+
   # # saju.mandacode.com/api/core -> saju-core service in saju namespace
   # - name: saju
   #   enabled: true
