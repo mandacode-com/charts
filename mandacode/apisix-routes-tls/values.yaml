@@ -33,23 +33,23 @@ routes:
     annotations:
       description: "ArgoCD service route"
 
-  # registry.mandacode.com -> harbor service in registry namespace
-  - name: harbor
-    enabled: true
-    namespace: registry
-    hosts:
-      - registry.mandacode.com
-    paths:
-      - "/*"
-      - "/"
-    upstream:
-      serviceName: harbor
-      servicePort: 80
-    labels:
-      app: harbor
-      component: harbor
-    annotations:
-      description: "Harbor service route"
+  # # registry.mandacode.com -> harbor service in registry namespace
+  # - name: harbor
+  #   enabled: true
+  #   namespace: registry
+  #   hosts:
+  #     - registry.mandacode.com
+  #   paths:
+  #     - "/*"
+  #     - "/"
+  #   upstream:
+  #     serviceName: harbor
+  #     servicePort: 80
+  #   labels:
+  #     app: harbor
+  #     component: harbor
+  #   annotations:
+  #     description: "Harbor service route"
 
   # # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
   # - name: mandacode-accounts-mandacode-auth
