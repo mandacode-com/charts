@@ -27,12 +27,6 @@ routes:
     upstream:
       serviceName: argocd-server
       servicePort: 80
-    plugins:
-      - name: proxy-rewrite
-        config:
-          headers:
-            set:
-              - "X-Forwarded-Proto: https"
     labels:
       app: argocd
       component: argocd
