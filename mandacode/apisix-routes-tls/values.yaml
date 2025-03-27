@@ -15,72 +15,72 @@ serviceAccount:
 
 # APISIX Routes configuration
 routes:
-  # registry.mandacode.com -> harbor service in registry namespace
-  - name: harbor-ui
-    enabled: true
-    namespace: registry
-    hosts:
-      - registry.mandacode.com
-    paths:
-      - "/*"
-      - "/"
-      - "/index.html"
-      - "/favicon.ico"
-      - "/static/*"
-    upstream:
-      serviceName: harbor-portal
-      servicePort: 80
-    labels:
-      app: harbor-portal
-      component: harbor
-    annotations:
-      description: "Harbor UI route"
-
-  # registry.mandacode.com/api -> harbor service in registry namespace
-  - name: harbor-api
-    enabled: true
-    namespace: registry
-    hosts:
-      - registry.mandacode.com
-    paths:
-      - "/api/*"
-      - "/api/"
-      - "/c/*"
-      - "/c/"
-      - "/service/*"
-      - "/service/"
-    upstream:
-      serviceName: harbor-core
-      servicePort: 80
-    labels:
-      app: harbor-core
-      component: harbor
-    annotations:
-      description: "Harbor API route"
-
-  # registry.mandacode.com/v2 -> harbor service in registry namespace
-  - name: harbor-registry
-    enabled: true
-    namespace: registry
-    hosts:
-      - registry.mandacode.com
-    paths:
-      - "/v2/*"
-      - "/v2"
-    upstream:
-      serviceName: harbor-registry
-      servicePort: 5000
-    labels:
-      app: harbor-registry
-      component: harbor
-    plugins:
-      - name: proxy-rewrite
-        config:
-          headers:
-            X-Forwarded-Proto: https
-            Authorization: "$http_authorization"
-    annotations:
-      description: "Harbor registry route"
+  # # registry.mandacode.com -> harbor service in registry namespace
+  # - name: harbor-ui
+  #   enabled: true
+  #   namespace: registry
+  #   hosts:
+  #     - registry.mandacode.com
+  #   paths:
+  #     - "/*"
+  #     - "/"
+  #     - "/index.html"
+  #     - "/favicon.ico"
+  #     - "/static/*"
+  #   upstream:
+  #     serviceName: harbor-portal
+  #     servicePort: 80
+  #   labels:
+  #     app: harbor-portal
+  #     component: harbor
+  #   annotations:
+  #     description: "Harbor UI route"
+  #
+  # # registry.mandacode.com/api -> harbor service in registry namespace
+  # - name: harbor-api
+  #   enabled: true
+  #   namespace: registry
+  #   hosts:
+  #     - registry.mandacode.com
+  #   paths:
+  #     - "/api/*"
+  #     - "/api/"
+  #     - "/c/*"
+  #     - "/c/"
+  #     - "/service/*"
+  #     - "/service/"
+  #   upstream:
+  #     serviceName: harbor-core
+  #     servicePort: 80
+  #   labels:
+  #     app: harbor-core
+  #     component: harbor
+  #   annotations:
+  #     description: "Harbor API route"
+  #
+  # # registry.mandacode.com/v2 -> harbor service in registry namespace
+  # - name: harbor-registry
+  #   enabled: true
+  #   namespace: registry
+  #   hosts:
+  #     - registry.mandacode.com
+  #   paths:
+  #     - "/v2/*"
+  #     - "/v2"
+  #   upstream:
+  #     serviceName: harbor-registry
+  #     servicePort: 5000
+  #   labels:
+  #     app: harbor-registry
+  #     component: harbor
+  #   plugins:
+  #     - name: proxy-rewrite
+  #       config:
+  #         headers:
+  #           X-Forwarded-Proto: https
+  #           Authorization: "$http_authorization"
+  #   annotations:
+  #     description: "Harbor registry route"
 
   # # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
   # - name: mandacode-accounts-mandacode-auth
@@ -154,6 +154,6 @@ ssl:
     secretName: mandacode-tls
     hosts:
       - argocd.mandacode.com
-      - registry.mandacode.com
+      # - registry.mandacode.com
       - auth.mandacode.com
       - saju.mandacode.com
