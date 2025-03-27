@@ -27,6 +27,13 @@ routes:
     upstream:
       serviceName: argocd-server
       servicePort: 80
+    plugins:
+      - name: proxy-rewrite
+        config:
+          headers:
+              set: {
+                "X-Forwarded-Proto: https"
+              }
     labels:
       app: argocd
       component: argocd
@@ -35,7 +42,7 @@ routes:
 
   # # auth-temp.mandacode.com/api/core -> mandacode-accounts-mandacode-auth service in mandacode-accounts namespace
   # - name: mandacode-accounts-mandacode-auth
-  #   enabled: true 
+  #   enabled: true
   #   namespace: mandacode-accounts
   #   hosts:
   #     - auth.mandacode.com
