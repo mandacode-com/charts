@@ -73,6 +73,11 @@ routes:
     labels:
       app: harbor-registry
       component: harbor
+    plugins:
+      - name: proxy-rewrite
+        config:
+          headers:
+            Authorization: "$http_authorization"
     annotations:
       description: "Harbor registry route"
 
