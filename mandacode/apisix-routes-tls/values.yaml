@@ -22,8 +22,32 @@ routes:
     hosts:
       - registry.mandacode.com
     paths:
-      - "/*"
       - "/"
+      - "/index.html"
+      - "/favicon.ico"
+      - "/static/*"
+    upstream:
+      serviceName: harbor-portal
+      servicePort: 80
+    labels:
+      app: harbor-portal
+      component: harbor
+    annotations:
+      description: "Harbor UI route"
+
+  # registry.mandacode.com/api -> harbor service in registry namespace
+  - name: harbor-api
+    enabled: true
+    namespace: registry
+    hosts:
+      - registry.mandacode.com
+    paths:
+      - "/api/*"
+      - "/api/"
+      - "/c/*"
+      - "/c/"
+      - "/service/*"
+      - "/service/"
     upstream:
       serviceName: harbor-core
       servicePort: 80
@@ -31,7 +55,7 @@ routes:
       app: harbor-core
       component: harbor
     annotations:
-      description: "Harbor UI route"
+      description: "Harbor API route"
 
   # registry.mandacode.com/v2 -> harbor service in registry namespace
   - name: harbor-registry
