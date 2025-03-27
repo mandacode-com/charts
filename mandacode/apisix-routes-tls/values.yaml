@@ -31,9 +31,8 @@ routes:
       - name: proxy-rewrite
         config:
           headers:
-              set: {
-                "X-Forwarded-Proto: https"
-              }
+            set:
+              - "X-Forwarded-Proto: https"
     labels:
       app: argocd
       component: argocd
