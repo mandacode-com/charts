@@ -41,16 +41,15 @@ end
 
 -- @function get_bearer_token
 local function get_bearer_token(header)
-  if not header then
-    return nil
+	if not header then
+		return nil
+	end
+
+  if header:sub(1, 7):lower() == "bearer " then
+    return header:sub(8)
   end
 
-  local parts = core.utils.split(header, " ")
-  if #parts ~= 2 or parts[1]:lower() ~= "bearer" then
-    return nil
-  end
-
-  return parts[2]
+  return nil
 end
 
 -- @function verify_jwt
