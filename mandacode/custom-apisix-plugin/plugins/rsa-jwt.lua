@@ -7,6 +7,7 @@ local validators = require("resty.jwt-validators")
 local schema = {
 	type = "object",
 	properties = {
+		debug = { type = "boolean", default = false },
 		force_auth = { type = "boolean", default = false },
 		gateway_auth_header = { type = "string", default = "X-Gateway-Verified" },
 		public_key = { type = "string" },
@@ -57,6 +58,10 @@ end
 local function verify_jwt(token, public_key)
 	local jwt_obj = jwt:load_jwt(token)
 	if not jwt_obj.valid or not jwt_obj.payload then
+		-- @debug
+		if debug then
+			core.log.error("Invalid JWT token: ", jwt_obj.reason)
+		end
 		return nil, "Invalid JWT token"
 	end
 
@@ -65,9 +70,15 @@ local function verify_jwt(token, public_key)
 		nbf = validators.is_not_before(),
 	}
 
-	local jwt_verify = jwt:verify(public_key, jwt_obj.payload, claim_spec)
+	local jwt_verify = jwt:verify_jwt_obj(public_key, jwt_obj, claim_spec)
+
+  -- @debug
+	if debug then
+		core.log.info("JWT verification: ", jwt_verify)
+	end
+
 	if not jwt_verify.verified then
-    return nil, jwt_verify.reason
+		return nil, "JWT verification failed"
 	end
 
 	return jwt_obj.payload, nil
@@ -82,6 +93,12 @@ end
 function _M.access(conf, ctx)
 	local auth_header = core.request.header(ctx, "Authorization")
 	local token = get_bearer_token(auth_header)
+
+	-- @debug
+	if debug then
+		core.log.info("Bearer token: ", token)
+	end
+
 	if not token then
 		if conf.force_auth then
 			unauthorized("Missing or Invalid Authorization header")
