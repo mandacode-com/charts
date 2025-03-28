@@ -68,17 +68,6 @@ routes:
       serviceName: saju
       servicePort: 80
     plugins:
-      - name: rsa-jwt
-        # secretRef: rsa-jwt-secret
-        config:
-          enable: true
-          force_auth: false
-          gateway_auth_header: "X-Gateway-Verified"
-          public_key: "something"
-          hmac_secret: "something"
-          exposed_payload_keys:
-            - uuid
-            - role
       - name: proxy-rewrite
         config:
           regex_uri: ["^/api/core(/.*)?$", "$1"]
@@ -88,6 +77,15 @@ routes:
           allow_methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
           allow_headers: "Authorization,Content-Type,Accept"
           max_age: 3600
+      - name: "rsa-jwt"
+        secretRef: rsa-jwt-secret
+        config:
+          enable: true
+          force_auth: false
+          gateway_auth_header: "X-Gateway-Verified"
+          exposed_payload_keys:
+            - uuid
+            - role
     labels:
       app: saju
       component: saju
