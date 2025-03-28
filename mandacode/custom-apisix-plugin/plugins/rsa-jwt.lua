@@ -2,6 +2,7 @@ local core = require("apisix.core")
 local jwt = require("resty.jwt")
 local hmac = require("resty.hmac")
 local resty_string = require("resty.string")
+local validators = require("resty.jwt-validators")
 
 local schema = {
 	type = "object",
@@ -45,11 +46,11 @@ local function get_bearer_token(header)
 		return nil
 	end
 
-  if header:sub(1, 7):lower() == "bearer " then
-    return header:sub(8)
-  end
+	if header:sub(1, 7):lower() == "bearer " then
+		return header:sub(8)
+	end
 
-  return nil
+	return nil
 end
 
 -- @function verify_jwt
@@ -59,7 +60,12 @@ local function verify_jwt(token, public_key)
 		return nil, "Invalid JWT token"
 	end
 
-	local jwt_verify = jwt:verify_jwt_obj(public_key, jwt_obj, ngx.time())
+	local claim_spec = {
+		exp = validators.is_not_expired(),
+		nbf = validators.is_not_before(),
+	}
+
+	local jwt_verify = jwt:verify(public_key, jwt_obj.payload, claim_spec)
 	if not jwt_verify.verified then
 		return nil, "JWT verification failed"
 	end
@@ -75,9 +81,7 @@ end
 -- @function access
 function _M.access(conf, ctx)
 	local auth_header = core.request.header(ctx, "Authorization")
-  print("auth_header: ", auth_header)
 	local token = get_bearer_token(auth_header)
-  print("token: ", token)
 	if not token then
 		if conf.force_auth then
 			unauthorized("Missing or Invalid Authorization header")
@@ -86,7 +90,6 @@ function _M.access(conf, ctx)
 	end
 
 	local payload, err = verify_jwt(token, conf.public_key)
-  print("payload: ", payload)
 	if not payload then
 		if conf.force_auth then
 			unauthorized(err)
@@ -96,7 +99,6 @@ function _M.access(conf, ctx)
 
 	local signing_parts = { token }
 
-  print("exposed_payload_keys: ", conf.exposed_payload_keys)
 	for _, key in ipairs(conf.exposed_payload_keys or {}) do
 		local value = payload[key]
 		if value then
