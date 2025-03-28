@@ -7,6 +7,6 @@ metadata:
   labels:
     {{- include "custom-apisix-plugin.labels" $ | nindent 4 }}
 data:
-  {{ .file }}: |
-{{ $.Files.Get (printf "plugins/%s" .file) | indent 4 }}
+  {{ .filename }}: |
+{{ $.Files.Get (printf "plugins/%s" .location) | indent 4 }}
 {{- end }}
