@@ -75,7 +75,9 @@ end
 -- @function access
 function _M.access(conf, ctx)
 	local auth_header = core.request.header(ctx, "Authorization")
+  print("auth_header: ", auth_header)
 	local token = get_bearer_token(auth_header)
+  print("token: ", token)
 	if not token then
 		if conf.force_auth then
 			unauthorized("Missing or Invalid Authorization header")
@@ -84,6 +86,7 @@ function _M.access(conf, ctx)
 	end
 
 	local payload, err = verify_jwt(token, conf.public_key)
+  print("payload: ", payload)
 	if not payload then
 		if conf.force_auth then
 			unauthorized(err)
@@ -93,6 +96,7 @@ function _M.access(conf, ctx)
 
 	local signing_parts = { token }
 
+  print("exposed_payload_keys: ", conf.exposed_payload_keys)
 	for _, key in ipairs(conf.exposed_payload_keys or {}) do
 		local value = payload[key]
 		if value then
