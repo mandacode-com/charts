@@ -68,7 +68,7 @@ local function verify_jwt(token, public_key)
 
 	local claim_spec = {
 		exp = validators.is_not_expired(),
-		nbf = validators.is_not_before(),
+    iat = validators.is_not_before(),
 	}
 
 	local jwt_verify = jwt:verify_jwt_obj(public_key, jwt_obj, claim_spec)
