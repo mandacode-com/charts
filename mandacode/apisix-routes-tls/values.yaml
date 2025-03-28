@@ -69,12 +69,11 @@ routes:
       servicePort: 80
     plugins:
       - name: rsa-jwt
+        secretRef: rsa-jwt-secret
         config:
           enable: true
           force_auth: false
           gateway_auth_header: "X-Gateway-Verified"
-          public_key: "abc"
-          hmac_secret: "efg"
           exposed_payload_keys:
             - uuid
             - role
@@ -93,20 +92,13 @@ routes:
     annotations:
       description: "Saju core service route"
 
-customPlugins:
-  - name: rsa-jwt
-    description: "RSA JWT verify plugin"
-    targetRoutes:
+secrets:
+  - name: rsa-jwt-secret
+    namespaces:
       - saju
-    config:
-      enable: true
-      force_auth: false
-      gateway_auth_header: "X-Gateway-Verified"
+    data:
       public_key: ""
       hmac_secret: ""
-      exposed_payload_keys:
-        - uuid
-        - role
 
 ssl:
   - name: mandacode-tls

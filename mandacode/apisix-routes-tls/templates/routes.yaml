@@ -1,4 +1,5 @@
 {{- range $route := .Values.routes }}
+{{- if $route.enabled }}
 ---
 apiVersion: apisix.apache.org/v2
 kind: ApisixRoute
@@ -42,17 +43,13 @@ spec:
         {{- range $route.plugins }}
         - name: {{ .name }}
           enable: true
+          {{- if .secretRef }}
+          secretRef: {{ .secretRef }}
+          {{- end }}
           {{- if .config }}
           config:
             {{- toYaml .config | nindent 12 }}
           {{- end }}
         {{- end }}
-        {{- range $plugin := $.Values.customPlugins }}
-        {{- if has $route.name $plugin.targetRoutes }}
-        - name: {{ $plugin.name }}
-          enable: true
-          config:
-            {{- toYaml $plugin.config | nindent 12 }}
-        {{- end }}
-        {{- end }}
+{{- end }}
 {{- end }}
