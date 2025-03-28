@@ -61,6 +61,7 @@ local function verify_jwt(token, public_key)
 		-- @debug
 		if debug then
 			core.log.error("Invalid JWT token: ", jwt_obj.reason)
+			return nil, jwt_obj.reason
 		end
 		return nil, "Invalid JWT token"
 	end
@@ -72,12 +73,12 @@ local function verify_jwt(token, public_key)
 
 	local jwt_verify = jwt:verify_jwt_obj(public_key, jwt_obj, claim_spec)
 
-  -- @debug
-	if debug then
-		core.log.info("JWT verification: ", jwt_verify)
-	end
-
 	if not jwt_verify.verified then
+		-- @debug
+		if debug then
+			core.log.error("JWT verification failed: ", jwt_verify.reason)
+			return nil, jwt_verify.reason
+		end
 		return nil, "JWT verification failed"
 	end
 
