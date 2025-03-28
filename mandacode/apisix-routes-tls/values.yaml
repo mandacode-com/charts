@@ -69,11 +69,13 @@ routes:
       servicePort: 80
     plugins:
       - name: rsa-jwt
-        secretRef: rsa-jwt-secret
+        # secretRef: rsa-jwt-secret
         config:
           enable: true
           force_auth: false
           gateway_auth_header: "X-Gateway-Verified"
+          public_key: "something"
+          hmac_secret: "something"
           exposed_payload_keys:
             - uuid
             - role
