@@ -168,18 +168,6 @@ postgresql:
     username: saju
     password: saju
     database: saju
-  primary:
-    enabled: true
-    persistence:
-      enabled: true
-      existingClaim: saju-postgres-pvc
-  securityContext:
-    enabled: true
-    fsGroup: 1001
-    runAsUser: 1001
-    fsGroupChangePolicy: "OnRootMismatch"
-  volumePermissions:
-    enabled: true
 
 prisma:
   database:

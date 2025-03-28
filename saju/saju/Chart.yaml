@@ -4,7 +4,7 @@ description: Saju application helm chart
 
 type: application
 
-version: 0.1.1
+version: 0.1.2-rc1
 
 dependencies:
   - name: postgresql
