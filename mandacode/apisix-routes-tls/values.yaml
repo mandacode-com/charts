@@ -68,6 +68,16 @@ routes:
       serviceName: saju
       servicePort: 80
     plugins:
+      - name: rsa-jwt
+        config:
+          enable: true
+          force_auth: false
+          gateway_auth_header: "X-Gateway-Verified"
+          public_key: "abc"
+          hmac_secret: "efg"
+          exposed_payload_keys:
+            - uuid
+            - role
       - name: proxy-rewrite
         config:
           regex_uri: ["^/api/core(/.*)?$", "$1"]
