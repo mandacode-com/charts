@@ -67,7 +67,7 @@ local function verify_jwt(token, public_key)
 
 	local jwt_verify = jwt:verify(public_key, jwt_obj.payload, claim_spec)
 	if not jwt_verify.verified then
-		return nil, "JWT verification failed"
+    return nil, jwt_verify.reason
 	end
 
 	return jwt_obj.payload, nil
