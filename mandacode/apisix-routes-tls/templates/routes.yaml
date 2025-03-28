@@ -1,5 +1,4 @@
 {{- range $route := .Values.routes }}
-{{- if $route.enabled }}
 ---
 apiVersion: apisix.apache.org/v2
 kind: ApisixRoute
@@ -56,5 +55,4 @@ spec:
             {{- toYaml $plugin.config | nindent 12 }}
         {{- end }}
         {{- end }}
-{{- end }}
 {{- end }}
