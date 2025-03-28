@@ -85,7 +85,7 @@ routes:
         secretRef: rsa-jwt-secret
         config:
           debug: false
-          force_auth: true
+          force_auth: false
           gateway_auth_header: "X-Gateway-Verified"
           exposed_payload_keys:
             - uuid
