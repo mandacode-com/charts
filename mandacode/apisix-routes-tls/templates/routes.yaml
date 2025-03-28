@@ -42,7 +42,7 @@ spec:
       plugins:
         {{- range $route.plugins }}
         - name: {{ .name }}
-          enable: true
+          enable: {{ .enable | default true }}
           {{- if .secretRef }}
           secretRef: {{ .secretRef }}
           {{- end }}
