@@ -77,7 +77,7 @@ routes:
           allow_methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
           allow_headers: "Authorization,Content-Type,Accept"
           max_age: 3600
-      - name: "rsa-jwt"
+      - name: rsa-jwt
         secretRef: rsa-jwt-secret
         config:
           enable: true
