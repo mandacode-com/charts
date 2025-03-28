@@ -84,12 +84,11 @@ routes:
         enable: true
         secretRef: rsa-jwt-secret
         config:
-          debug: false
           force_auth: false
-          gateway_auth_header: "X-Gateway-Verified"
+          gateway_header_prefix: "X-Gateway-"
           exposed_payload_keys:
-            - uuid
-            - role
+            - UUID
+            - Role
     labels:
       app: saju
       component: saju
