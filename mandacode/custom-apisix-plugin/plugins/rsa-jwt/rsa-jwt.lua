@@ -7,9 +7,8 @@ local validators = require("resty.jwt-validators")
 local schema = {
 	type = "object",
 	properties = {
-		debug = { type = "boolean", default = false },
 		force_auth = { type = "boolean", default = false },
-		gateway_auth_header = { type = "string", default = "X-Gateway-Verified" },
+		gateway_header_prefix = { type = "string", default = "X-Gateway-" },
 		public_key = { type = "string" },
 		hmac_secret = { type = "string" },
 		exposed_payload_keys = {
@@ -18,8 +17,8 @@ local schema = {
 				type = "string",
 			},
 			default = {
-				"uuid",
-				"role",
+        "UUID",
+        "Role",
 			},
 		},
 	},
@@ -58,11 +57,6 @@ end
 local function verify_jwt(token, public_key)
 	local jwt_obj = jwt:load_jwt(token)
 	if not jwt_obj.valid or not jwt_obj.payload then
-		-- @debug
-		if debug then
-			core.log.error("Invalid JWT token: ", jwt_obj.reason)
-			return nil, jwt_obj.reason
-		end
 		return nil, "Invalid JWT token"
 	end
 
@@ -74,11 +68,6 @@ local function verify_jwt(token, public_key)
 	local jwt_verify = jwt:verify_jwt_obj(public_key, jwt_obj, claim_spec)
 
 	if not jwt_verify.verified then
-		-- @debug
-		if debug then
-			core.log.error("JWT verification failed: ", jwt_verify.reason)
-			return nil, jwt_verify.reason
-		end
 		return nil, "JWT verification failed"
 	end
 
@@ -94,11 +83,6 @@ end
 function _M.access(conf, ctx)
 	local auth_header = core.request.header(ctx, "Authorization")
 	local token = get_bearer_token(auth_header)
-
-	-- @debug
-	if debug then
-		core.log.info("Bearer token: ", token)
-	end
 
 	if not token then
 		if conf.force_auth then
@@ -121,7 +105,7 @@ function _M.access(conf, ctx)
 		local value = payload[key]
 		if value then
 			local sanitized_value = type(value) == "string" and value:gsub("[\r\n]", "") or tostring(value)
-			core.request.set_header(ctx, "X-Gateway-" .. key, sanitized_value)
+			core.request.set_header(ctx, conf.gateway_header_prefix .. key, sanitized_value)
 			signing_parts[#signing_parts + 1] = sanitized_value
 		end
 	end
@@ -130,7 +114,7 @@ function _M.access(conf, ctx)
 	local signer = hmac:new(conf.hmac_secret, hmac.ALGOS.SHA256)
 	local mac_hex = resty_string.to_hex(signer:final(signing_data))
 
-	core.request.set_header(ctx, conf.gateway_auth_header, mac_hex)
+	core.request.set_header(ctx, conf.gateway_header_prefix .. "MAC", mac_hex)
 end
 
 return _M

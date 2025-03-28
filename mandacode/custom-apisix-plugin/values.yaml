@@ -3,5 +3,5 @@ fullnameOverride: ""
 
 plugins:
   - name: rsa-jwt
-    file: rsa-jwt.lua
+    file: rsa-jwt/rsa-jwt.lua
     description: "RSA JWT verify plugin"
