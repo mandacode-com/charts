@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.app.configMapName }}
+  namespace: {{ .Release.Namespace }}
+data:
+  NODE_ENV: {{ .Values.nodeEnv | default "production" | quote }}
+  PORT: {{ .Values.image.port | default 3000 | quote }}
+  OPENAI_SYSTEM_MESSAGE_DAILY_ALL: {{ .Values.openai.system_message.daily.all | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_CHART: {{ .Values.openai.system_message.yearly.chart | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_GENERAL: {{ .Values.openai.system_message.yearly.general | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_RELATIONSHIP: {{ .Values.openai.system_message.yearly.relationship | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_WEALTH: {{ .Values.openai.system_message.yearly.wealth | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_ROMANTIC: {{ .Values.openai.system_message.yearly.romantic | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_HEALTH: {{ .Values.openai.system_message.yearly.health | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_CAREER: {{ .Values.openai.system_message.yearly.career | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_WAYS_TO_IMPROVE: {{ .Values.openai.system_message.yearly.waysToImprove | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_CAUTION: {{ .Values.openai.system_message.yearly.caution | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_QUESTION_ANSWER: {{ .Values.openai.system_message.yearly.questionAnswer | default "" | quote }}
+  AUTH_HEADERS_MAC: {{ .Values.auth.headers.mac | default "" | quote }}
+  AUTH_HEADERS_UUID: {{ .Values.auth.headers.uuid | default "" | quote }}
+  AUTH_HEADERS_ROLE: {{ .Values.auth.headers.role | default "" | quote }}

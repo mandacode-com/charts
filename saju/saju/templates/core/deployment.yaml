@@ -60,47 +60,36 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.config.app.configMapName }}
           env:
-            - name: NODE_ENV
-              value: {{ .Values.nodeEnv }}
-            - name: PORT
-              value: {{ .Values.image.port | quote }}
             - name: OPENAI_API_KEY
               value: {{ .Values.openai.apiKey }}
+            - name: DB_HOST
+              value: {{ include "saju.database.host" . }}
+            - name: DB_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: DB_NAME
+              value: {{ .Values.database.name | quote }}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "saju.database.secretName" . }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "saju.database.secretName" . }}
+                  key: password
             - name: DATABASE_URL
+              value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+            - name: AUTH_HMAC_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.prisma.database.secretName }}
-                  key: DATABASE_URL
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.jwt.secret.name }}
-                  key: key
-            - name: OPENAI_SYSTEM_MESSAGE_DAILY_ALL
-              value: {{ .Values.openai.system_message.daily.all | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_CHART
-              value: {{ .Values.openai.system_message.yearly.chart | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_GENERAL
-              value: {{ .Values.openai.system_message.yearly.general | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_RELATIONSHIP
-              value: {{ .Values.openai.system_message.yearly.relationship | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_WEALTH
-              value: {{ .Values.openai.system_message.yearly.wealth | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_ROMANTIC
-              value: {{ .Values.openai.system_message.yearly.romantic | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_HEALTH
-              value: {{ .Values.openai.system_message.yearly.health | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_CAREER
-              value: {{ .Values.openai.system_message.yearly.career | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_WAYS_TO_IMPROVE
-              value: {{ .Values.openai.system_message.yearly.waysToImprove | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_CAUTION
-              value: {{ .Values.openai.system_message.yearly.caution | default nil | quote }}
-            - name: OPENAI_SYSTEM_MESSAGE_YEARLY_QUESTION_ANSWER
-              value: {{ .Values.openai.system_message.yearly.questionAnswer | default nil | quote }}
-            - name: MANDACODE_VERIFY_TOKEN_ENDPOINT
-              value: {{ .Values.auth.mandacode.verifyTokenEndpoint | default nil | quote }}
+                  name: {{ .Values.auth.secretName }}
+                  key: hmacSecret
 
       {{- with .Values.volumes }}
       volumes:

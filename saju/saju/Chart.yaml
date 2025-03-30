@@ -4,9 +4,10 @@ description: Saju application helm chart
 
 type: application
 
-version: 0.1.2-rc1
+version: 0.1.2
 
 dependencies:
   - name: postgresql
     version: 16.0.0
     repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled

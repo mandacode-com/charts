@@ -60,3 +60,15 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "saju.database.host" -}}
+{{- if .Values.database.host -}}
+{{ .Values.database.host }}
+{{- else -}}
+{{ printf "%s.%s.svc.cluster.local" .Values.postgresql.fullnameOverride .Release.Namespace }}
+{{- end }}
+{{- end }}
+
+{{- define "saju.database.secretName" -}}
+{{ printf "%s-database-secret" .Release.Name }}
+{{- end}}
