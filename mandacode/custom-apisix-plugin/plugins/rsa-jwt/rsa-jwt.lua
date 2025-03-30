@@ -8,7 +8,7 @@ local schema = {
 		force_auth = { type = "boolean", default = false },
 		access_public_key = { type = "string" },
 		gateway_jwt_secret = { type = "string" },
-		gateway_jwt_header = { type = "string", default = "x-gateway-jwt" },
+		gateway_jwt_header = { type = "string", default = "X-Gateway-JWT" },
 		gateway_jwt_exp = { type = "integer", default = 30 },
 		gateway_jwt_iss = { type = "string", default = "api-gateway" },
 		gateway_jwt_aud = { type = "string", default = "default-app" },
