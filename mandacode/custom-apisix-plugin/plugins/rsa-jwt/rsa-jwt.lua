@@ -114,7 +114,7 @@ function _M.access(conf, ctx)
 	local signer = hmac:new(conf.hmac_secret, hmac.ALGOS.SHA256)
 	local mac_hex = resty_string.to_hex(signer:final(signing_data))
 
-	core.request.set_header(ctx, conf.gateway_header_prefix .. "MAC", mac_hex)
+	core.request.set_header(ctx, conf.gateway_header_prefix .. "mac", mac_hex)
 end
 
 return _M
