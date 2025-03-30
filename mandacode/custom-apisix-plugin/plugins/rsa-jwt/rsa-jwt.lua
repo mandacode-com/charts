@@ -8,7 +8,7 @@ local schema = {
 	type = "object",
 	properties = {
 		force_auth = { type = "boolean", default = false },
-		gateway_header_prefix = { type = "string", default = "x-gateway-verified-" },
+		gateway_header_prefix = { type = "string", default = "x-gateway-auth-" },
 		public_key = { type = "string" },
 		hmac_secret = { type = "string" },
 		exposed_payload_keys = {
