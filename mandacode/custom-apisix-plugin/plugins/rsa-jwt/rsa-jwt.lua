@@ -77,12 +77,12 @@ end
 
 -- @function create_jwt
 local function create_jwt(payload, secret)
-	local jwt_obj = jwt:sign(secret, {
+	local signed_jwt = jwt:sign(secret, {
 		header = { typ = "JWT", alg = "HS256" },
 		payload = payload,
 	})
 
-	return jwt_obj.token
+	return signed_jwt
 end
 
 -- @function check_schema
@@ -113,9 +113,7 @@ function _M.access(conf, ctx)
 		return
 	end
 
-	core.request.set_header(ctx, "test-header-1", "test-value")
 	local now = ngx.time()
-	core.request.set_header(ctx, "test-header-2", "test-value")
 	local filtered_payload = {
 		exp = now + conf.gateway_jwt_exp,
 		iat = now,
@@ -128,11 +126,9 @@ function _M.access(conf, ctx)
 			filtered_payload[key] = value
 		end
 	end
-  core.request.set_header(ctx, "test-header-3", "test-value")
 
 	local gateway_jwt = create_jwt(filtered_payload, conf.gateway_jwt_secret)
 	core.request.set_header(ctx, conf.gateway_jwt_header, gateway_jwt)
-  core.request.set_header(ctx, "test-header-4", "test-value")
 end
 
 return _M
