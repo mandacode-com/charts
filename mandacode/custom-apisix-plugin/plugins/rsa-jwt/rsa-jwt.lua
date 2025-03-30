@@ -96,7 +96,7 @@ function _M.access(conf, ctx)
 	local token = get_bearer_token(auth_header)
 
 	-- empty gateway jwt header
-	core.request.clear_header(ctx, conf.gateway_jwt_header)
+	core.request.set_header(ctx, conf.gateway_jwt_header, nil)
 
 	if not token then
 		if conf.force_auth then
