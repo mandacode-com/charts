@@ -77,11 +77,10 @@ end
 
 -- @function create_jwt
 local function create_jwt(payload, secret)
-	local jwt_obj = jwt:sign({
-		header = { typ = "JWT", alg = "HS256" },
-		payload = payload,
-		secret = secret,
-	})
+  local jwt_obj = jwt:sign(secret, {
+    header = { typ = "JWT", alg = "HS256" },
+    payload = payload,
+  })
 
 	return jwt_obj.token
 end
