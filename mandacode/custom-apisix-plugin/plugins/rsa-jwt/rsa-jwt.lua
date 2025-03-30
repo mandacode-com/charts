@@ -77,10 +77,10 @@ end
 
 -- @function create_jwt
 local function create_jwt(payload, secret)
-  local jwt_obj = jwt:sign(secret, {
-    header = { typ = "JWT", alg = "HS256" },
-    payload = payload,
-  })
+	local jwt_obj = jwt:sign(secret, {
+		header = { typ = "JWT", alg = "HS256" },
+		payload = payload,
+	})
 
 	return jwt_obj.token
 end
@@ -95,8 +95,8 @@ function _M.access(conf, ctx)
 	local auth_header = core.request.header(ctx, "authorization")
 	local token = get_bearer_token(auth_header)
 
-	-- empty header
-	core.request.set_header(ctx, conf.gateway_jwt_header, "")
+	-- empty gateway jwt header
+	core.request.clear_header(ctx, conf.gateway_jwt_header)
 
 	if not token then
 		if conf.force_auth then
@@ -129,6 +129,7 @@ function _M.access(conf, ctx)
 
 	local gateway_jwt = create_jwt(filtered_payload, conf.gateway_jwt_secret)
 	core.request.set_header(ctx, conf.gateway_jwt_header, gateway_jwt)
+	core.request.set_header(ctx, "test-header", gateway_jwt)
 end
 
 return _M
