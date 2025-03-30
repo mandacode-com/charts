@@ -106,7 +106,7 @@ function _M.access(conf, ctx)
 		return
 	end
 
-	local payload, err = verify_jwt(token, conf.public_key)
+	local payload, err = verify_jwt(token, conf.access_public_key)
 	if not payload then
 		if conf.force_auth then
 			unauthorized(err)
