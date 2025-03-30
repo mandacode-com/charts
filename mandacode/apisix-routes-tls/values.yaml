@@ -84,14 +84,14 @@ routes:
         enable: true
         secretRef: rsa-jwt-secret
         config:
-          force_auth: false
-          gateway_jwt_header: 'x-gateway-jwt'
+          force_auth: true
+          gateway_jwt_header: "x-gateway-jwt"
           gateway_jwt_exp: 30
-          gateway_jwt_iss: 'api-gateway'
-          gateway_jwt_aud: 'saju'
+          gateway_jwt_iss: "api-gateway"
+          gateway_jwt_aud: "saju"
           payload_keys:
-            - 'uuid'
-            - 'role'
+            - "uuid"
+            - "role"
     labels:
       app: saju
       component: saju
