@@ -84,7 +84,7 @@ routes:
         enable: true
         secretRef: rsa-jwt-secret
         config:
-          force_auth: false
+          force_auth: true
           gateway_jwt_header: "x-gateway-jwt"
           gateway_jwt_exp: 30
           gateway_jwt_iss: "api-gateway"
