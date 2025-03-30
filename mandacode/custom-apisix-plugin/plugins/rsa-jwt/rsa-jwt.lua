@@ -8,7 +8,7 @@ local schema = {
 	type = "object",
 	properties = {
 		force_auth = { type = "boolean", default = false },
-		gateway_header_prefix = { type = "string", default = "X-Gateway-" },
+		gateway_header_prefix = { type = "string", default = "x-gateway-verified-" },
 		public_key = { type = "string" },
 		hmac_secret = { type = "string" },
 		exposed_payload_keys = {
@@ -17,8 +17,8 @@ local schema = {
 				type = "string",
 			},
 			default = {
-        "UUID",
-        "Role",
+				"uuid",
+				"role",
 			},
 		},
 	},
@@ -101,7 +101,7 @@ function _M.access(conf, ctx)
 
 	local signing_parts = { token }
 
-	for _, key in ipairs(conf.exposed_payload_keys or {}) do
+	for _, key in ipairs(conf.exposed_payload_keys) do
 		local value = payload[key]
 		if value then
 			local sanitized_value = type(value) == "string" and value:gsub("[\r\n]", "") or tostring(value)
