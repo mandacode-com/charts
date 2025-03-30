@@ -85,10 +85,13 @@ routes:
         secretRef: rsa-jwt-secret
         config:
           force_auth: false
-          gateway_header_prefix: "x-gateway-auth-"
-          exposed_payload_keys:
-            - uuid
-            - role
+          gateway_jwt_header: 'x-gateway-jwt'
+          gateway_jwt_exp: 30
+          gateway_jwt_iss: 'api-gateway'
+          gateway_jwt_aud: 'saju'
+          payload_keys:
+            - 'uuid'
+            - 'role'
     labels:
       app: saju
       component: saju
@@ -100,8 +103,8 @@ secrets:
     namespaces:
       - saju
     data:
-      public_key: ""
-      hmac_secret: ""
+      access_public_key: ""
+      gateway_jwt_secret: ""
 
 ssl:
   - name: mandacode-tls
