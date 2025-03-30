@@ -140,11 +140,8 @@ openai:
 
 auth:
   secretName: saju-auth-secret
-  hmacSecret: ""
-  headers:
-    mac: "X-Gateway-MAC"
-    uuid: "X-Gateway-UUID"
-    role: "X-Gateway-Role"
+  gatewayJwtSecret: ""
+  gatewayJwtHeader: "x-gateway-jwt"
 
 database:
   existingSecret: ""

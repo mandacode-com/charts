@@ -85,11 +85,11 @@ spec:
                   key: password
             - name: DATABASE_URL
               value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
-            - name: AUTH_HMAC_SECRET
+            - name: AUTH_GATEWAY_JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.auth.secretName }}
-                  key: hmacSecret
+                  name: {{ include "saju.auth.secretName" . }}
+                  key: gatewayJwtSecret
 
       {{- with .Values.volumes }}
       volumes:

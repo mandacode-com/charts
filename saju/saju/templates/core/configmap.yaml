@@ -17,6 +17,4 @@ data:
   OPENAI_SYSTEM_MESSAGE_YEARLY_WAYS_TO_IMPROVE: {{ .Values.openai.system_message.yearly.waysToImprove | default "" | quote }}
   OPENAI_SYSTEM_MESSAGE_YEARLY_CAUTION: {{ .Values.openai.system_message.yearly.caution | default "" | quote }}
   OPENAI_SYSTEM_MESSAGE_YEARLY_QUESTION_ANSWER: {{ .Values.openai.system_message.yearly.questionAnswer | default "" | quote }}
-  AUTH_HEADERS_MAC: {{ .Values.auth.headers.mac | default "" | quote }}
-  AUTH_HEADERS_UUID: {{ .Values.auth.headers.uuid | default "" | quote }}
-  AUTH_HEADERS_ROLE: {{ .Values.auth.headers.role | default "" | quote }}
+  AUTH_GATEWAY_JWT_HEADER: {{ .Values.auth.gatewayJwtHeader | default "" | quote }}

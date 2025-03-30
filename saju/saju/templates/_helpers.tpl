@@ -61,6 +61,10 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{- define "saju.auth.secretName" -}}
+{{ printf "%s-auth-secret" .Release.Name }}
+{{- end }}
+
 {{- define "saju.database.host" -}}
 {{- if .Values.database.host -}}
 {{ .Values.database.host }}
