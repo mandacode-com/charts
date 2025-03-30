@@ -1,17 +1,18 @@
 local core = require("apisix.core")
 local jwt = require("resty.jwt")
-local hmac = require("resty.hmac")
-local resty_string = require("resty.string")
 local validators = require("resty.jwt-validators")
 
 local schema = {
 	type = "object",
 	properties = {
 		force_auth = { type = "boolean", default = false },
-		gateway_header_prefix = { type = "string", default = "x-gateway-auth-" },
-		public_key = { type = "string" },
-		hmac_secret = { type = "string" },
-		exposed_payload_keys = {
+		access_public_key = { type = "string" },
+		gateway_jwt_secret = { type = "string" },
+		gateway_jwt_header = { type = "string", default = "x-gateway-jwt" },
+		gateway_jwt_exp = { type = "integer", default = 30 },
+		gateway_jwt_iss = { type = "string", default = "api-gateway" },
+		gateway_jwt_aud = { type = "string", default = "default-app" },
+		payload_keys = {
 			type = "array",
 			items = {
 				type = "string",
@@ -22,7 +23,7 @@ local schema = {
 			},
 		},
 	},
-	required = { "public_key", "hmac_secret" },
+	required = { "access_public_key", "gateway_jwt_secret" },
 	additionalProperties = false,
 }
 
@@ -74,6 +75,17 @@ local function verify_jwt(token, public_key)
 	return jwt_obj.payload, nil
 end
 
+-- @function create_jwt
+local function create_jwt(payload, secret)
+	local jwt_obj = jwt:sign({
+		header = { typ = "JWT", alg = "HS256" },
+		payload = payload,
+		secret = secret,
+	})
+
+	return jwt_obj.token
+end
+
 -- @function check_schema
 function _M.check_schema(conf)
 	return core.schema.check(schema, conf)
@@ -81,8 +93,11 @@ end
 
 -- @function access
 function _M.access(conf, ctx)
-	local auth_header = core.request.header(ctx, "Authorization")
+	local auth_header = core.request.header(ctx, "authorization")
 	local token = get_bearer_token(auth_header)
+
+	-- empty header
+	core.request.set_header(ctx, conf.gateway_jwt_header, "")
 
 	if not token then
 		if conf.force_auth then
@@ -99,22 +114,22 @@ function _M.access(conf, ctx)
 		return
 	end
 
-	local signing_parts = { token }
-
-	for _, key in ipairs(conf.exposed_payload_keys) do
+	local now = ngx.time()
+	local filtered_payload = {
+		exp = now + conf.gateway_jwt_exp,
+		iat = now,
+		iss = conf.gateway_jwt_iss,
+		aud = conf.gateway_jwt_aud,
+	}
+	for _, key in ipairs(conf.payload_keys) do
 		local value = payload[key]
 		if value then
-			local sanitized_value = type(value) == "string" and value:gsub("[\r\n]", "") or tostring(value)
-			core.request.set_header(ctx, conf.gateway_header_prefix .. key, sanitized_value)
-			signing_parts[#signing_parts + 1] = sanitized_value
+			filtered_payload[key] = value
 		end
 	end
 
-	local signing_data = table.concat(signing_parts, ":")
-	local signer = hmac:new(conf.hmac_secret, hmac.ALGOS.SHA256)
-	local mac_hex = resty_string.to_hex(signer:final(signing_data))
-
-	core.request.set_header(ctx, conf.gateway_header_prefix .. "mac", mac_hex)
+	local gateway_jwt = create_jwt(filtered_payload, conf.gateway_jwt_secret)
+	core.request.set_header(ctx, conf.gateway_jwt_header, gateway_jwt)
 end
 
 return _M
