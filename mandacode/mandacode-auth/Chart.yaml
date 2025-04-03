@@ -1,7 +1,10 @@
 apiVersion: v2
 name: mandacode-auth
 description: Mandacode Auth Service Helm Chart
-
 type: application
-
-version: 0.1.0
+version: 0.1.1
+dependencies:
+  - name: auto-mailer
+    version: 0.1.0
+    repository: "oci://registry.mandacode.com/mailer/charts"
+    condition: auto-mailer.enabled

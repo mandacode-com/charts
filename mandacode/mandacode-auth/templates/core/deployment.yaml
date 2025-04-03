@@ -1,69 +1,73 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mandacode-auth.fullname" . }}
+  name: {{ include "app.core.fullname" . }}
   labels:
-    {{- include "mandacode-auth.labels" . | nindent 4 }}
+    {{- include "app.core.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  {{- if not .Values.core.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mandacode-auth.selectorLabels" . | nindent 6 }}
+      {{- include "app.core.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
-        configmap.checksum: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- with .Values.podAnnotations }}
+        configmap.checksum: {{ include (print $.Template.BasePath "/core/configmap.yaml") . | sha256sum }}
+        {{- with .Values.core.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        dbSecret.checksum: {{ include (print $.Template.BasePath "/secrets/database.yaml") . | sha256sum }}
+        cookieSecret.checksum: {{ include (print $.Template.BasePath "/secrets/cookie.yaml") . | sha256sum }}
+        sessionStorageSecret.checksum: {{ include (print $.Template.BasePath "/secrets/session-storage.yaml") . | sha256sum }}
+        oauthSecret.checksum: {{ include (print $.Template.BasePath "/secrets/oauth.yaml") . | sha256sum }}
       labels:
-        {{- include "mandacode-auth.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
+        {{- include "app.core.labels" . | nindent 8 }}
+        {{- with .Values.core.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with .Values.core.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mandacode-auth.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
+      serviceAccountName: {{ include "app.core.serviceAccountName" . }}
+      {{- with .Values.core.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
       initContainers:
         - name: prisma-migrate
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.core.image.repository }}:{{ .Values.core.image.tag }}"
+          imagePullPolicy: {{ .Values.core.image.pullPolicy }}
           command: ["npx", "prisma", "migrate", "deploy"]
           env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
+                  name: {{ include "app.core.configMapName" . }}
                   key: DB_HOST
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
+                  name: {{ include "app.core.configMapName" . }}
                   key: DB_PORT
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
+                  name: {{ include "app.core.configMapName" . }}
                   key: DB_NAME
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.database.secretName" . }}
+                  name: {{ include "app.database.secretName" . }}
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.database.secretName" . }}
+                  name: {{ include "app.database.secretName" . }}
                   key: password
             - name: DATABASE_URL
               value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
@@ -74,122 +78,142 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.core.image.repository }}:{{ .Values.core.image.tag }}"
+          imagePullPolicy: {{ .Values.core.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.core.service.port }}
               protocol: TCP
-          {{- with .Values.livenessProbe }}
+          {{- with .Values.core.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.readinessProbe }}
+          {{- with .Values.core.readinessProbe }}
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.resources }}
+          {{- with .Values.core.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.volumeMounts }}
+          {{- with .Values.core.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           envFrom:
             - configMapRef:
-                name: {{ include "core.configMapName" . }}
+                name: {{ include "app.core.configMapName" . }}
           env:
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.cookie.secretName" . }}
+                  name: {{ include "app.core.cookie.secretName" . }}
                   key: secret
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
+                  name: {{ include "app.core.configMapName" . }}
                   key: DB_HOST
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
+                  name: {{ include "app.core.configMapName" . }}
                   key: DB_PORT
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "core.configMapName" . }}
+                  name: {{ include "app.core.configMapName" . }}
                   key: DB_NAME
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.database.secretName" . }}
+                  name: {{ include "app.database.secretName" . }}
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.database.secretName" . }}
+                  name: {{ include "app.database.secretName" . }}
                   key: password
             - name: DATABASE_URL
               value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
             - name: SESSION_STORAGE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.session.storage.secretName" . }}
+                  name: {{ include "app.session.storage.secretName" . }}
                   key: redis-password
             - name: JWT_PUBLIC_ACCESS
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.jwt.access.secretName" . }}
+                  name: {{ .Values.core.jwt.access.secretName }}
                   key: public
             - name: JWT_PRIVATE_ACCESS
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.jwt.access.secretName" . }}
+                  name: {{ .Values.core.jwt.access.secretName }}
                   key: private
             - name: JWT_PUBLIC_REFRESH
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.jwt.refresh.secretName" . }}
+                  name: {{ .Values.core.jwt.refresh.secretName }}
                   key: public
             - name: JWT_PRIVATE_REFRESH
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.jwt.refresh.secretName" . }}
+                  name: {{ .Values.core.jwt.refresh.secretName }}
                   key: private
             - name: JWT_PUBLIC_EMAIL_VERIFICATION
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.jwt.emailVerification.secretName" . }}
+                  name: {{ .Values.core.jwt.emailVerification.secretName }}
                   key: public
             - name: JWT_PRIVATE_EMAIL_VERIFICATION
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.jwt.emailVerification.secretName" . }}
+                  name: {{ .Values.core.jwt.emailVerification.secretName }}
                   key: private
             - name: OAUTH_GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.oauth.secretName" . }}
+                  name: {{ include "app.core.oauth.secretName" . }}
                   key: google-client-id
             - name: OAUTH_GOOGLE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "core.oauth.secretName" . }}
+                  name: {{ include "app.core.oauth.secretName" . }}
                   key: google-client-secret
-      {{- with .Values.volumes }}
+            - name: OAUTH_KAKAO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.core.oauth.secretName" . }}
+                  key: kakao-client-id
+            - name: OAUTH_KAKAO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.core.oauth.secretName" . }}
+                  key: kakao-client-secret
+            - name: OAUTH_NAVER_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.core.oauth.secretName" . }}
+                  key: naver-client-id
+            - name: OAUTH_NAVER_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.core.oauth.secretName" . }}
+                  key: naver-client-secret
+      {{- with .Values.core.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.core.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.core.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.core.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

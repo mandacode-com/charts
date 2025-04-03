@@ -1,0 +1,12 @@
+{{- if eq .Values.session.storage.type "internal" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.session.storage.internal.host }}
+spec:
+  selector:
+    app: {{ .Values.session.storage.internal.host }}
+  ports:
+    - port: {{ .Values.session.storage.internal.port }}
+      targetPort: 6379
+{{- end }}

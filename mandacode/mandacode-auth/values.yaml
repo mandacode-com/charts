@@ -1,127 +1,224 @@
-replicaCount: 1
-
-image:
-  repository: registry.mandacode.com/mandacode/accounts/auth-core
-  pullPolicy: IfNotPresent
-  tag: "0.1.1-rc1"
-
-imagePullSecrets:
-  - name: regcred
-
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  create: true
-  automount: true
-  annotations: {}
-  name: ""
-
-podAnnotations: {}
-podLabels: {}
-
-podSecurityContext: {}
-
-securityContext: {}
-
-service:
-  type: ClusterIP
-  port: 80
-  targetPort: 3000
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
-resources: {}
-
-livenessProbe:
-  httpGet:
-    path: /health
-    port: 3000
-readinessProbe:
-  httpGet:
-    path: /health
-    port: 3000
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
-
-volumes: []
-
-volumeMounts: []
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
 core:
-  configMapName: ""
+  replicaCount: 1
 
-database:
-  host: "localhost"
-  port: 5432
-  name: "auth"
-  auth:
+  image:
+    repository: registry.mandacode.com/mandacode/accounts/auth-core
+    pullPolicy: IfNotPresent
+    tag: "0.1.1"
+
+  imagePullSecrets:
+    - name: regcred
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  resources: {}
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 3000
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 3000
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  volumes: []
+
+  volumeMounts: []
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  cors:
+    origin: "https://auth.mandacode.com"
+
+  cookie:
+    secretName: ""
+    secret: ""
+    domain: "mandacode.com"
+
+  jwt:
+    access:
+      secretName: ""
+      expiresIn: "15m"
+    refresh:
+      secretName: ""
+      expiresIn: "7d"
+    emailVerification:
+      secretName: ""
+      expiresIn: "1d"
+
+  oauth:
     existingSecret: ""
-    username: "postgres"
-    password: "password"
-
-cors:
-  origin: "https://auth.mandacode.com"
-
-cookie:
-  secretName: ""
-  secret: ""
-  domain: "mandacode.com"
+    google:
+      endpoints:
+        token: "https://oauth2.googleapis.com/token"
+        profile: "https://www.googleapis.com/oauth2/v3/userinfo"
+        auth: "https://accounts.google.com/o/oauth2/v2/auth"
+      grantType: "authorization_code"
+      clientId: ""
+      clientSecret: ""
+      redirectUri: ""
+    kakao:
+      endpoints:
+        token: "https://kauth.kakao.com/oauth/token"
+        profile: "https://kapi.kakao.com/v2/user/me"
+        auth: "https://kauth.kakao.com/oauth/authorize"
+      grantType: "authorization_code"
+      clientId: ""
+      clientSecret: ""
+      redirectUri: ""
+    naver:
+      endpoints:
+        token: "https://nid.naver.com/oauth2.0/token"
+        profile: "https://openapi.naver.com/v1/nid/me"
+        auth: "https://nid.naver.com/oauth2.0/authorize"
+      grantType: "authorization_code"
+      clientId: ""
+      clientSecret: ""
+      redirectUri: ""
 
 session:
   name: "SID"
   timeout: 86400
   storage:
-    host: "localhost"
-    port: 6379
-    auth:
-      existingSecret: ""
-      password: ""
+    type: "internal"
+    existingSecret: ""
+    internal:
+      image: "redis:latest"
+      host: "test-redis"
+      port: 6379
+      auth:
+        password: "password"
+    external:
+      host: ""
+      port: 6379
+      auth:
+        password: ""
 
 autoMailer:
-  host: "localhost"
+  host: "auto-mailer"
   port: 50051
   verifyEmailUrl: "https://auth.mandacode.com/auth/local/verify-email"
 
-jwt:
-  access:
-    secretName: ""
-    expiresIn: "15m"
-  refresh:
-    secretName: ""
-    expiresIn: "7d"
-  emailVerification:
-    secretName: ""
-    expiresIn: "1d"
-
-oauth:
+database:
+  type: "internal"
   existingSecret: ""
-  google:
-    endpoints:
-      token: "https://oauth2.googleapis.com/token"
-      profile: "https://www.googleapis.com/oauth2/v3/userinfo"
-      auth: "https://accounts.google.com/o/oauth2/v2/auth"
-    grantType: "authorization_code"
-    clientId: ""
-    clientSecret: ""
-    redirectUri: ""
+  external:
+    host: ""
+    port: 5432
+    database: "auth"
+    auth:
+      username: ""
+      password: ""
+  internal:
+    image: "postgres:latest"
+    host: "test-postgres"
+    port: 5432
+    database: "auth"
+    auth:
+      username: "postgres"
+      password: "password"
+
+# AUTO-MAILER
+auto-mailer:
+  enabled: true
+
+  replicaCount: 1
+
+  image:
+    repository: registry.mandacode.com/mailer/auto-mailer
+    pullPolicy: IfNotPresent
+    tag: "0.1.0"
+    host: "0.0.0.0"
+    port: 3000
+
+  imagePullSecrets:
+    - name: regcred
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: ClusterIP
+    port: 50051
+    targetPort: 3000
+
+  resources: {}
+
+  livenessProbe:
+    exec:
+      command:
+        - /bin/grpc_health_probe
+        - -addr=:3000
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  volumes: []
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+  # Additional volumeMounts on the output Deployment definition.
+  volumeMounts: []
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  mailer:
+    host: smtp.zoho.com
+    port: 465
+    secure: true
+    user: ""
+    pass: ""

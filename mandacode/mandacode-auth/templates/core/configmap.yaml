@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.core.configMapName" . }}
+  labels:
+    app: {{ .Release.Name }}
+data:
+  NODE_ENV: {{ .Values.nodeEnv | default "production" | quote }}
+  PORT: {{ .Values.core.service.targetPort | quote }}
+  CORS_ORIGIN: {{ .Values.core.cors.origin | quote }}
+  COOKIE_DOMAIN: {{ .Values.core.cookie.domain | quote }}
+  SESSION_NAME: {{ .Values.session.name | quote }}
+  SESSION_TIMEOUT: {{ .Values.session.timeout | quote }}
+
+  AUTO_MAILER_URL: {{ printf "%s:%s" .Values.autoMailer.host (toString .Values.autoMailer.port) | quote }}
+  VERIFY_EMAIL_URL: {{ .Values.autoMailer.verifyEmailUrl | quote }}
+
+  JWT_EXPIRES_IN_ACCESS: {{ .Values.core.jwt.access.expiresIn | quote }}
+  JWT_EXPIRES_IN_REFRESH: {{ .Values.core.jwt.refresh.expiresIn | quote }}
+  JWT_EXPIRES_IN_EMAIL_VERIFICATION: {{ .Values.core.jwt.emailVerification.expiresIn | quote }}
+
+  {{- if eq .Values.session.storage.type "internal" }}
+  SESSION_STORAGE_HOST: {{ printf "%s.%s.svc.cluster.local" .Values.session.storage.internal.host .Release.Namespace | quote }}
+  SESSION_STORAGE_PORT: {{ .Values.session.storage.internal.port | quote }}
+  {{- else if eq .Values.session.storage.type "external" }}
+  SESSION_STORAGE_HOST: {{ .Values.session.storage.external.host | quote }}
+  SESSION_STORAGE_PORT: {{ .Values.session.storage.external.port | quote }}
+  {{- end }}
+
+  {{- if eq .Values.database.type "internal" }}
+  DB_NAME: {{ .Values.database.internal.database | quote }}
+  DB_HOST: {{ printf "%s.%s.svc.cluster.local" .Values.database.internal.host .Release.Namespace | quote }}
+  DB_PORT: {{ .Values.database.internal.port | quote }}
+  {{- else if eq .Values.database.type "external" }}
+  DB_NAME: {{ .Values.database.external.database | quote }}
+  DB_HOST: {{ .Values.database.external.host | quote }}
+  DB_PORT: {{ .Values.database.external.port | quote }}
+  {{- end }}
+
+  OAUTH_GOOGLE_ENDPOINT_TOKEN: {{ .Values.core.oauth.google.endpoints.token | quote }}
+  OAUTH_GOOGLE_ENDPOINT_PROFILE: {{ .Values.core.oauth.google.endpoints.profile | quote }}
+  OAUTH_GOOGLE_ENDPOINT_AUTH: {{ .Values.core.oauth.google.endpoints.auth | quote }}
+  OAUTH_GOOGLE_REDIRECT_URI: {{ .Values.core.oauth.google.redirectUri | quote }}
+  OAUTH_GOOGLE_GRANT_TYPE: {{ .Values.core.oauth.google.grantType | quote }}
+
+  OAUTH_KAKAO_ENDPOINT_TOKEN: {{ .Values.core.oauth.kakao.endpoints.token | quote }}
+  OAUTH_KAKAO_ENDPOINT_PROFILE: {{ .Values.core.oauth.kakao.endpoints.profile | quote }}
+  OAUTH_KAKAO_ENDPOINT_AUTH: {{ .Values.core.oauth.kakao.endpoints.auth | quote }}
+  OAUTH_KAKAO_REDIRECT_URI: {{ .Values.core.oauth.kakao.redirectUri | quote }}
+  OAUTH_KAKAO_GRANT_TYPE: {{ .Values.core.oauth.kakao.grantType | quote }}
+
+  OAUTH_NAVER_ENDPOINT_TOKEN: {{ .Values.core.oauth.naver.endpoints.token | quote }}
+  OAUTH_NAVER_ENDPOINT_PROFILE: {{ .Values.core.oauth.naver.endpoints.profile | quote }}
+  OAUTH_NAVER_ENDPOINT_AUTH: {{ .Values.core.oauth.naver.endpoints.auth | quote }}
+  OAUTH_NAVER_REDIRECT_URI: {{ .Values.core.oauth.naver.redirectUri | quote }}
+  OAUTH_NAVER_GRANT_TYPE: {{ .Values.core.oauth.naver.grantType | quote }}
