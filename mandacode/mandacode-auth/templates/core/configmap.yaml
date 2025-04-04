@@ -40,17 +40,20 @@ data:
   OAUTH_GOOGLE_ENDPOINT_TOKEN: {{ .Values.core.oauth.google.endpoints.token | quote }}
   OAUTH_GOOGLE_ENDPOINT_PROFILE: {{ .Values.core.oauth.google.endpoints.profile | quote }}
   OAUTH_GOOGLE_ENDPOINT_AUTH: {{ .Values.core.oauth.google.endpoints.auth | quote }}
-  OAUTH_GOOGLE_REDIRECT_URI: {{ .Values.core.oauth.google.redirectUri | quote }}
+  OAUTH_GOOGLE_REDIRECT_URI_WEB: {{ .Values.core.oauth.google.redirectUris.web | quote }}
+  OAUTH_GOOGLE_REDIRECT_URI_MOBILE: {{ .Values.core.oauth.google.redirectUris.mobile | quote }}
   OAUTH_GOOGLE_GRANT_TYPE: {{ .Values.core.oauth.google.grantType | quote }}
 
   OAUTH_KAKAO_ENDPOINT_TOKEN: {{ .Values.core.oauth.kakao.endpoints.token | quote }}
   OAUTH_KAKAO_ENDPOINT_PROFILE: {{ .Values.core.oauth.kakao.endpoints.profile | quote }}
   OAUTH_KAKAO_ENDPOINT_AUTH: {{ .Values.core.oauth.kakao.endpoints.auth | quote }}
-  OAUTH_KAKAO_REDIRECT_URI: {{ .Values.core.oauth.kakao.redirectUri | quote }}
+  OAUTH_KAKAO_REDIRECT_URI_WEB: {{ .Values.core.oauth.kakao.redirectUris.web | quote }}
+  OAUTH_KAKAO_REDIRECT_URI_MOBILE: {{ .Values.core.oauth.kakao.redirectUris.mobile | quote }}
   OAUTH_KAKAO_GRANT_TYPE: {{ .Values.core.oauth.kakao.grantType | quote }}
 
   OAUTH_NAVER_ENDPOINT_TOKEN: {{ .Values.core.oauth.naver.endpoints.token | quote }}
   OAUTH_NAVER_ENDPOINT_PROFILE: {{ .Values.core.oauth.naver.endpoints.profile | quote }}
   OAUTH_NAVER_ENDPOINT_AUTH: {{ .Values.core.oauth.naver.endpoints.auth | quote }}
-  OAUTH_NAVER_REDIRECT_URI: {{ .Values.core.oauth.naver.redirectUri | quote }}
+  OAUTH_NAVER_REDIRECT_URI_WEB: {{ .Values.core.oauth.naver.redirectUris.web | quote }}
+  OAUTH_NAVER_REDIRECT_URI_MOBILE: {{ .Values.core.oauth.naver.redirectUris.mobile | quote }}
   OAUTH_NAVER_GRANT_TYPE: {{ .Values.core.oauth.naver.grantType | quote }}

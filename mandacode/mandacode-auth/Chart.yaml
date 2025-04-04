@@ -2,7 +2,7 @@ apiVersion: v2
 name: mandacode-auth
 description: Mandacode Auth Service Helm Chart
 type: application
-version: 0.1.1
+version: 0.1.2
 dependencies:
   - name: auto-mailer
     version: 0.1.0

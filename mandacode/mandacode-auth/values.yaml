@@ -2,9 +2,9 @@ core:
   replicaCount: 1
 
   image:
-    repository: registry.mandacode.com/mandacode/accounts/auth-core
+    repository: registry.mandacode.com/mandacode/auth/auth-core
     pullPolicy: IfNotPresent
-    tag: "0.1.1"
+    tag: "0.1.4"
 
   imagePullSecrets:
     - name: regcred
@@ -87,7 +87,9 @@ core:
       grantType: "authorization_code"
       clientId: ""
       clientSecret: ""
-      redirectUri: ""
+      redirectUris:
+        web: "https://auth.mandacode.com/api/core/auth/oauth/google/callback"
+        mobile: "https://auth.mandacode.com/api/core/m/auth/oauth/google/callback"
     kakao:
       endpoints:
         token: "https://kauth.kakao.com/oauth/token"
@@ -96,7 +98,9 @@ core:
       grantType: "authorization_code"
       clientId: ""
       clientSecret: ""
-      redirectUri: ""
+      redirectUris:
+        web: "https://auth.mandacode.com/api/core/auth/oauth/kakao/callback"
+        mobile: "https://auth.mandacode.com/api/core/m/auth/oauth/kakao/callback"
     naver:
       endpoints:
         token: "https://nid.naver.com/oauth2.0/token"
@@ -105,7 +109,9 @@ core:
       grantType: "authorization_code"
       clientId: ""
       clientSecret: ""
-      redirectUri: ""
+      redirectUris:
+        web: "https://auth.mandacode.com/api/core/auth/oauth/naver/callback"
+        mobile: "https://auth.mandacode.com/api/core/m/auth/oauth/naver/callback"
 
 session:
   name: "SID"
