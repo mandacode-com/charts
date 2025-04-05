@@ -43,7 +43,7 @@ routes:
       - "/api/core/*"
       - "/api/core"
     upstream:
-      serviceName: mandacode-auth
+      serviceName: mandacode-auth-core
       servicePort: 80
     plugins:
       - name: proxy-rewrite
@@ -51,7 +51,7 @@ routes:
         config:
           regex_uri: ["^/api/core(/.*)?$", "$1"]
     labels:
-      app: mandacode-auth
+      app: mandacode-auth-core
       component: mandacode-auth
     annotations:
       description: "Authentication service route"
