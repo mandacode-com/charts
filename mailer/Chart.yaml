@@ -1,0 +1,7 @@
+apiVersion: v2
+name: mailer
+description: Mailer Service Helm Chart
+
+type: application
+
+version: 0.1.1
