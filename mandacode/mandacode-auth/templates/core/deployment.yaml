@@ -1,4 +1,5 @@
 apiVersion: apps/v1
+
 kind: Deployment
 metadata:
   name: {{ include "app.core.fullname" . }}
@@ -14,10 +15,10 @@ spec:
   template:
     metadata:
       annotations:
-        configmap.checksum: {{ include (print $.Template.BasePath "/core/configmap.yaml") . | sha256sum }}
         {{- with .Values.core.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        configmap.checksum: {{ include (print $.Template.BasePath "/core/configmap.yaml") . | sha256sum }}
         dbSecret.checksum: {{ include (print $.Template.BasePath "/secrets/database.yaml") . | sha256sum }}
         cookieSecret.checksum: {{ include (print $.Template.BasePath "/secrets/cookie.yaml") . | sha256sum }}
         sessionStorageSecret.checksum: {{ include (print $.Template.BasePath "/secrets/session-storage.yaml") . | sha256sum }}
@@ -141,36 +142,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "app.session.storage.secretName" . }}
                   key: redis-password
-            - name: JWT_PUBLIC_ACCESS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.jwt.access.secretName }}
-                  key: public
-            - name: JWT_PRIVATE_ACCESS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.jwt.access.secretName }}
-                  key: private
-            - name: JWT_PUBLIC_REFRESH
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.jwt.refresh.secretName }}
-                  key: public
-            - name: JWT_PRIVATE_REFRESH
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.jwt.refresh.secretName }}
-                  key: private
-            - name: JWT_PUBLIC_EMAIL_VERIFICATION
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.jwt.emailVerification.secretName }}
-                  key: public
-            - name: JWT_PRIVATE_EMAIL_VERIFICATION
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.jwt.emailVerification.secretName }}
-                  key: private
             - name: OAUTH_GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:

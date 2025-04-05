@@ -12,12 +12,12 @@ data:
   SESSION_NAME: {{ .Values.session.name | quote }}
   SESSION_TIMEOUT: {{ .Values.session.timeout | quote }}
 
-  AUTO_MAILER_URL: {{ printf "%s:%s" .Values.autoMailer.host (toString .Values.autoMailer.port) | quote }}
-  VERIFY_EMAIL_URL: {{ .Values.autoMailer.verifyEmailUrl | quote }}
+  TOKEN_SERVICE_URL: {{ printf "%s:%s" .Values.tokenService.host (toString .Values.tokenService.port) | quote }}
 
-  JWT_EXPIRES_IN_ACCESS: {{ .Values.core.jwt.access.expiresIn | quote }}
-  JWT_EXPIRES_IN_REFRESH: {{ .Values.core.jwt.refresh.expiresIn | quote }}
-  JWT_EXPIRES_IN_EMAIL_VERIFICATION: {{ .Values.core.jwt.emailVerification.expiresIn | quote }}
+  MAILER_SERVICE_URL: {{ printf "%s:%s" .Values.mailerService.host (toString .Values.mailerService.port) | quote }}
+  MAILER_MIN_DELAY: {{ .Values.mailerService.minDelay | quote }}
+
+  VERIFY_EMAIL_URL: {{ .Values.core.auth.verifyEmailUrl | quote }}
 
   {{- if eq .Values.session.storage.type "internal" }}
   SESSION_STORAGE_HOST: {{ printf "%s.%s.svc.cluster.local" .Values.session.storage.internal.host .Release.Namespace | quote }}

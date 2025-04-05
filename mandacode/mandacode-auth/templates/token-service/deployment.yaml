@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "app.tokenService.fullname" . }}
+  labels:
+    {{- include "app.tokenService.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.tokenService.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "app.tokenService.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        configmap.checksum: {{ include (print $.Template.BasePath "/token-service/configmap.yaml") . | sha256sum }}
+        {{- with .Values.tokenService.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "app.tokenService.labels" . | nindent 8 }}
+        {{- with .Values.tokenService.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.tokenService.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "app.tokenService.serviceAccountName" . }}
+      {{- with .Values.tokenService.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.tokenService.image.repository }}:{{ .Values.tokenService.image.tag }}"
+          imagePullPolicy: {{ .Values.tokenService.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.tokenService.service.port }}
+              protocol: TCP
+          {{- with .Values.tokenService.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tokenService.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tokenService.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tokenService.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "app.tokenService.configMapName" . }}
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: JWT_PUBLIC_ACCESS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.tokenService.jwt.access.secretName }}
+                  key: public
+            - name: JWT_PRIVATE_ACCESS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.tokenService.jwt.access.secretName }}
+                  key: private
+            - name: JWT_PUBLIC_REFRESH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.tokenService.jwt.refresh.secretName }}
+                  key: public
+            - name: JWT_PRIVATE_REFRESH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.tokenService.jwt.refresh.secretName }}
+                  key: private
+            - name: JWT_PUBLIC_EMAIL_VERIFICATION
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.tokenService.jwt.emailVerification.secretName }}
+                  key: public
+            - name: JWT_PRIVATE_EMAIL_VERIFICATION
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.tokenService.jwt.emailVerification.secretName }}
+                  key: private
+
+      {{- with .Values.tokenService.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tokenService.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tokenService.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tokenService.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

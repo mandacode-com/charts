@@ -1,6 +1,6 @@
 dependencies:
-- name: auto-mailer
+- name: mailer
   repository: oci://registry.mandacode.com/mailer/charts
-  version: 0.1.0
-digest: sha256:b5eae2af0171f9a38e880f5a8bd4dc530ca86fea44a8b2230f8cb69a3a5e3e1f
-generated: "2025-04-03T17:10:51.937928708+09:00"
+  version: 0.1.1-rc1
+digest: sha256:ac9e6b00a0772eaa21b59022a54e7ba80a80d66a73579e51fe4d58e22cf1e67a
+generated: "2025-04-05T16:42:45.954386647+09:00"

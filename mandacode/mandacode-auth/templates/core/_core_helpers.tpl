@@ -2,7 +2,11 @@
 Name
 */}}
 {{- define "app.core.name" -}}
-{{- default .Chart.Name .Values.core.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.core.nameOverride }}
+{{- .Values.core.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- else -}}
+core
+{{- end }}
 {{- end }}
 
 {{/*
@@ -12,12 +16,7 @@ Fullname
 {{- if .Values.core.fullnameOverride }}
 {{- .Values.core.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.core.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- printf "%s-core" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 
@@ -34,9 +33,6 @@ Common labels
 {{- define "app.core.labels" -}}
 helm.sh/chart: {{ include "app.core.chart" . }}
 {{ include "app.core.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.tokenService.configMapName" . }}
+  labels:
+    app: {{ .Release.Name }}
+data:
+  NODE_ENV: {{ .Values.nodeEnv | default "production" | quote }}
+  JWT_EXPIRES_IN_ACCESS: {{ .Values.tokenService.jwt.access.expiresIn | quote }}
+  JWT_EXPIRES_IN_REFRESH: {{ .Values.tokenService.jwt.refresh.expiresIn | quote }}
+  JWT_EXPIRES_IN_EMAIL_VERIFICATION: {{ .Values.tokenService.jwt.emailVerification.expiresIn | quote }}
