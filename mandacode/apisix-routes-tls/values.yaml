@@ -66,7 +66,7 @@ routes:
       - "/api/core/*"
       - "/api/core"
     upstream:
-      serviceName: saju
+      serviceName: saju-core
       servicePort: 80
     plugins:
       - name: proxy-rewrite
