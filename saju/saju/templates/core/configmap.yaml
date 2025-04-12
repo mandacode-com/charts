@@ -1,20 +1,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.config.app.configMapName }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "app.core.configMapName" . }}
+  labels:
+    app: {{ .Release.Name }}
 data:
-  NODE_ENV: {{ .Values.nodeEnv | default "production" | quote }}
-  PORT: {{ .Values.image.port | default 3000 | quote }}
-  OPENAI_SYSTEM_MESSAGE_DAILY_ALL: {{ .Values.openai.system_message.daily.all | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_CHART: {{ .Values.openai.system_message.yearly.chart | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_GENERAL: {{ .Values.openai.system_message.yearly.general | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_RELATIONSHIP: {{ .Values.openai.system_message.yearly.relationship | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_WEALTH: {{ .Values.openai.system_message.yearly.wealth | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_ROMANTIC: {{ .Values.openai.system_message.yearly.romantic | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_HEALTH: {{ .Values.openai.system_message.yearly.health | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_CAREER: {{ .Values.openai.system_message.yearly.career | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_WAYS_TO_IMPROVE: {{ .Values.openai.system_message.yearly.waysToImprove | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_CAUTION: {{ .Values.openai.system_message.yearly.caution | default "" | quote }}
-  OPENAI_SYSTEM_MESSAGE_YEARLY_QUESTION_ANSWER: {{ .Values.openai.system_message.yearly.questionAnswer | default "" | quote }}
-  AUTH_GATEWAY_JWT_HEADER: {{ .Values.auth.gatewayJwtHeader | default "" | quote }}
+  NODE_ENV: {{ .Values.core.nodeEnv | default "production" | quote }}
+  PORT: {{ .Values.core.image.port | default 3000 | quote }}
+  OPENAI_SYSTEM_MESSAGE_DAILY_ALL: {{ .Values.core.openai.system_message.daily.all | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_CHART: {{ .Values.core.openai.system_message.yearly.chart | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_GENERAL: {{ .Values.core.openai.system_message.yearly.general | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_RELATIONSHIP: {{ .Values.core.openai.system_message.yearly.relationship | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_WEALTH: {{ .Values.core.openai.system_message.yearly.wealth | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_ROMANTIC: {{ .Values.core.openai.system_message.yearly.romantic | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_HEALTH: {{ .Values.core.openai.system_message.yearly.health | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_CAREER: {{ .Values.core.openai.system_message.yearly.career | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_WAYS_TO_IMPROVE: {{ .Values.core.openai.system_message.yearly.waysToImprove | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_CAUTION: {{ .Values.core.openai.system_message.yearly.caution | default "" | quote }}
+  OPENAI_SYSTEM_MESSAGE_YEARLY_QUESTION_ANSWER: {{ .Values.core.openai.system_message.yearly.questionAnswer | default "" | quote }}
+  AUTH_GATEWAY_JWT_HEADER: {{ .Values.gateway.jwtHeader | default "" | quote }}
+
+  {{- if eq .Values.database.type "internal" }}
+  DB_NAME: {{ .Values.database.internal.database | quote }}
+  DB_HOST: {{ printf "%s.%s.svc.cluster.local" .Values.database.internal.host .Release.Namespace | quote }}
+  DB_PORT: {{ .Values.database.internal.port | quote }}
+  {{- else if eq .Values.database.type "external" }}
+  DB_NAME: {{ .Values.database.external.database | quote }}
+  DB_HOST: {{ .Values.database.external.host | quote }}
+  DB_PORT: {{ .Values.database.external.port | quote }}
+  {{- end }}

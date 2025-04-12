@@ -1,0 +1,39 @@
+{{- if eq .Values.database.type "internal" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.database.internal.host }}
+  annotations:
+    dbSecret.checksum: {{ include (print $.Template.BasePath "/secrets/database.yaml") . | sha256sum }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.database.internal.host }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.database.internal.host }}
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.database.internal.image }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.database.secretName" . }}
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.database.secretName" . }}
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "app.core.configMapName" . }}
+                  key: DB_NAME
+          ports:
+            - containerPort: 5432
+{{- end }}

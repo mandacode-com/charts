@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "saju-core.fullname" . }}
+  name: {{ include "app.core.fullname" . }}
   labels:
-    {{- include "saju-core.labels" . | nindent 4 }}
+    {{- include "app.core.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.core.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.core.service.port }}
+      targetPort: {{ .Values.core.service.targetPort }}
       protocol: TCP
+      name: http
   selector:
-    {{- include "saju-core.selectorLabels" . | nindent 4 }}
+    {{- include "app.core.selectorLabels" . | nindent 4 }}
