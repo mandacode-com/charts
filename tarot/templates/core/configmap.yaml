@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.core.configMapName" . }}
+  labels:
+    app: {{ .Release.Name }}
+data:
+  NODE_ENV: {{ .Values.core.nodeEnv | default "production" | quote }}
+  PORT: {{ .Values.core.image.port | default 3000 | quote }}
+  AUTH_GATEWAY_JWT_HEADER: {{ .Values.gateway.jwtHeader | default "" | quote }}
+
+  {{- if .Values.core.openai.system_message.today }}
+  OPENAI_SYSTEM_MESSAGE_TODAY: {{ .Values.core.openai.system_message.today | default "" | quote }}
+  {{- end }}
+  {{- if .Values.core.openai.system_message.rommance }}
+  OPENAI_SYSTEM_MESSAGE_ROMMANCE: {{ .Values.core.openai.system_message.rommance | default "" | quote }}
+  {{- end }}
+  {{- if .Values.core.openai.system_message.monthlyStudy }}
+  OPENAI_SYSTEM_MESSAGE_MONTHLY_STUDY: {{ .Values.core.openai.system_message.monthlyStudy | default "" | quote }}
+  {{- end }}
+
+  {{- if eq .Values.database.type "internal" }}
+  DB_NAME: {{ .Values.database.internal.database | quote }}
+  DB_HOST: {{ printf "%s.%s.svc.cluster.local" .Values.database.internal.host .Release.Namespace | quote }}
+  DB_PORT: {{ .Values.database.internal.port | quote }}
+  {{- else if eq .Values.database.type "external" }}
+  DB_NAME: {{ .Values.database.external.database | quote }}
+  DB_HOST: {{ .Values.database.external.host | quote }}
+  DB_PORT: {{ .Values.database.external.port | quote }}
+  {{- end }}

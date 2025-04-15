@@ -1,0 +1,7 @@
+apiVersion: v2
+name: tarot
+description: Tarot application helm chart
+
+type: application
+
+version: 0.1.0
