@@ -29,3 +29,9 @@ data:
   DB_HOST: {{ .Values.database.external.host | quote }}
   DB_PORT: {{ .Values.database.external.port | quote }}
   {{- end }}
+
+  EVENT_BUS_CLIENT_ID: {{ .Values.core.eventBus.client.clientId | default "" | quote }}
+  EVENT_BUS_BROKERS: {{ .Values.core.eventBus.client.brokers | default "" | quote }}
+  EVENT_BUS_GROUP_ID: {{ .Values.core.eventBus.consumer.groupId | default "" | quote }}
+  EVENT_BUS_DLT_RETRY_MAX_ATTEMPTS: {{ .Values.core.eventBus.dlt.retry.maxAttempts | default 3 | quote }}
+  EVENT_BUS_DLT_RETRY_DELAY: {{ .Values.core.eventBus.dlt.retry.delay | default 1000 | quote }}
