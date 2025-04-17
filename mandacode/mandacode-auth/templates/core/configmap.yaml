@@ -57,3 +57,9 @@ data:
   OAUTH_NAVER_REDIRECT_URI_WEB: {{ .Values.core.oauth.naver.redirectUris.web | quote }}
   OAUTH_NAVER_REDIRECT_URI_MOBILE: {{ .Values.core.oauth.naver.redirectUris.mobile | quote }}
   OAUTH_NAVER_GRANT_TYPE: {{ .Values.core.oauth.naver.grantType | quote }}
+
+  EVENT_BUS_CLIENT_ID: {{ .Values.core.eventBus.client.clientId | default "" | quote }}
+  EVENT_BUS_BROKERS: {{ .Values.core.eventBus.client.brokers | default "" | quote }}
+  EVENT_BUS_GROUP_ID: {{ .Values.core.eventBus.consumer.groupId | default "" | quote }}
+  EVENT_BUS_DLT_RETRY_MAX_ATTEMPTS: {{ .Values.core.eventBus.dlt.retry.maxAttempts | default 3 | quote }}
+  EVENT_BUS_DLT_RETRY_DELAY: {{ .Values.core.eventBus.dlt.retry.delay | default 1000 | quote }}

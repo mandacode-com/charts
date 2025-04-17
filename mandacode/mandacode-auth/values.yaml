@@ -4,7 +4,7 @@ core:
   image:
     repository: registry.mandacode.com/mandacode/auth/auth-core
     pullPolicy: IfNotPresent
-    tag: "0.1.4"
+    tag: "0.1.13"
 
   imagePullSecrets:
     - name: regcred
@@ -104,6 +104,17 @@ core:
       redirectUris:
         web: "https://auth.mandacode.com/api/core/auth/oauth/naver/callback"
         mobile: "https://auth.mandacode.com/api/core/m/auth/oauth/naver/callback"
+
+  eventBus:
+    client:
+      clientId: "auth.auth-core"
+      brokers: ""
+    consumer:
+      groupId: "auth.auth-core"
+    dlt:
+      retry:
+        maxAttempts: 3
+        delay: 1000
 
 tokenService:
   host: "token-service"
