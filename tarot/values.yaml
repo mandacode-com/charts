@@ -4,7 +4,7 @@ core:
   image:
     repository: registry.mandacode.com/tarot/tarot-core
     pullPolicy: IfNotPresent
-    tag: "0.0.1"
+    tag: "0.1.0"
     port: 3000
 
   imagePullSecrets:
@@ -94,6 +94,17 @@ core:
       today: ""
       rommance: ""
       monthlyStudy: ""
+
+  eventBus:
+    client:
+      clientId: "tarot.tarot-core"
+      brokers: ""
+    consumer:
+      groupId: "tarot.tarot-core"
+    dlt:
+      retry:
+        maxAttempts: 3
+        delay: 1000
 
 gateway:
   existingSecret: ""
