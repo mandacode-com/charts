@@ -73,7 +73,7 @@ Transport secret name
 */}}
 {{- define "app.core.transport.secretName" }}
 {{- if .Values.core.transport.existingSecret }}
-{{ .Values.core.transport.existingSecret }}
+{{- .Values.core.transport.existingSecret | quote }}
 {{- else -}}
 {{ printf "%s-transport-secret" .Release.Name }}
 {{- end }}
