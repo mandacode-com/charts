@@ -111,7 +111,7 @@ core:
   configMapName: ""
 
   transport:
-    existingSecret: ""
+    existingSecret: "something"
     name: "Mandacode"
     host: smtp.zoho.com
     port: 465

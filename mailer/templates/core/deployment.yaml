@@ -69,12 +69,12 @@ spec:
             - name: MAILER_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "app.core.transport.secretName" . }}
+                  name: "{{ include "app.core.transport.secretName" . }}"
                   key: username
             - name: MAILER_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "app.core.transport.secretName" . }}
+                  name: "{{ include "app.core.transport.secretName" . }}"
                   key: password
       {{- with .Values.core.volumes }}
       volumes:
