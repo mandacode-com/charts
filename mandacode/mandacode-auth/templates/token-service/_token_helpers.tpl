@@ -65,3 +65,11 @@ Service Account Name
 {{- default "default" .Values.tokenService.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "app.tokenService.jwt.secretName" }}
+{{- if .Values.tokenService.jwt.existingSecret }}
+{{- .Values.tokenService.jwt.existingSecret }}
+{{- else -}}
+{{- printf "%s-jwt-secret" .Release.Name }}
+{{- end }}
+{{- end }}

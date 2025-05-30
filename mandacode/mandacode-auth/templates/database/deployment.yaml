@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: {{ .Values.database.internal.host }}
   annotations:
-    dbSecret.checksum: {{ include (print $.Template.BasePath "/secrets/database.yaml") . | sha256sum }}
+    dbSecretName.checksum: {{ include "app.database.secretName" . | sha256sum }}
 spec:
   replicas: 1
   selector:

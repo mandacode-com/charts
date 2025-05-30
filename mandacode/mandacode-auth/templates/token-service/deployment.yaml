@@ -70,33 +70,33 @@ spec:
             - name: JWT_PUBLIC_ACCESS
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.tokenService.jwt.access.secretName }}
-                  key: public
+                  name: {{ include "app.tokenService.jwt.secretName" . }}
+                  key: jwt-public-access
             - name: JWT_PRIVATE_ACCESS
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.tokenService.jwt.access.secretName }}
-                  key: private
+                  name: {{ include "app.tokenService.jwt.secretName" . }}
+                  key: jwt-private-access
             - name: JWT_PUBLIC_REFRESH
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.tokenService.jwt.refresh.secretName }}
-                  key: public
+                  name: {{ include "app.tokenService.jwt.secretName" . }}
+                  key: jwt-public-refresh
             - name: JWT_PRIVATE_REFRESH
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.tokenService.jwt.refresh.secretName }}
-                  key: private
+                  name: {{ include "app.tokenService.jwt.secretName" . }}
+                  key: jwt-private-refresh
             - name: JWT_PUBLIC_EMAIL_VERIFICATION
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.tokenService.jwt.emailVerification.secretName }}
-                  key: public
+                  name: {{ include "app.tokenService.jwt.secretName" . }}
+                  key: jwt-public-email-verification
             - name: JWT_PRIVATE_EMAIL_VERIFICATION
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.tokenService.jwt.emailVerification.secretName }}
-                  key: private
+                  name: {{ include "app.tokenService.jwt.secretName" . }}
+                  key: jwt-private-email-verification
 
       {{- with .Values.tokenService.volumes }}
       volumes:

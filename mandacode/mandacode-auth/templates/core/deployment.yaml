@@ -19,10 +19,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         configmap.checksum: {{ include (print $.Template.BasePath "/core/configmap.yaml") . | sha256sum }}
-        dbSecret.checksum: {{ include (print $.Template.BasePath "/secrets/database.yaml") . | sha256sum }}
-        cookieSecret.checksum: {{ include (print $.Template.BasePath "/secrets/cookie.yaml") . | sha256sum }}
-        sessionStorageSecret.checksum: {{ include (print $.Template.BasePath "/secrets/session-storage.yaml") . | sha256sum }}
-        oauthSecret.checksum: {{ include (print $.Template.BasePath "/secrets/oauth.yaml") . | sha256sum }}
+        dbSecretName.checksum: {{ include "app.database.secretName" . | sha256sum }}
+        cookieSecretName.checksum: {{ include "app.core.cookie.secretName" . | sha256sum }}
+        sessionStorageSecretName.checksum: {{ include "app.session.storage.secretName" . | sha256sum }}
+        oauthSecretName.checksum: {{ include "app.core.oauth.secretName" . | sha256sum }}
       labels:
         {{- include "app.core.labels" . | nindent 8 }}
         {{- with .Values.core.podLabels }}

@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: {{ .Values.session.storage.internal.host }}
   annotations:
-    sessionStorageSecret.checksum: {{ include (print $.Template.BasePath "/secrets/session-storage.yaml") . | sha256sum }}
+    sessionStorageSecretName.checksum: {{ include "app.session.storage.secretName" . | sha256sum }}
 spec:
   replicas: 1
   selector:

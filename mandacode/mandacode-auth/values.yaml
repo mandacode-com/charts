@@ -62,7 +62,7 @@ core:
     origin: "https://auth.mandacode.com"
 
   cookie:
-    secretName: ""
+    existingSecret: ""
     secret: ""
     domain: "mandacode.com"
 
@@ -125,7 +125,7 @@ tokenService:
   image:
     repository: registry.mandacode.com/mandacode/auth/token-service
     pullPolicy: IfNotPresent
-    tag: "0.1.0-rc1"
+    tag: "0.1.0"
 
   imagePullSecrets:
     - name: regcred
@@ -170,14 +170,18 @@ tokenService:
 
   # Token Service JWT settings
   jwt:
+    existingSecret: ""
     access:
-      secretName: ""
+      publicKey: ""
+      privateKey: ""
       expiresIn: "15m"
     refresh:
-      secretName: ""
+      publicKey: ""
+      privateKey: ""
       expiresIn: "7d"
     emailVerification:
-      secretName: ""
+      publicKey: ""
+      privateKey: ""
       expiresIn: "1d"
 
 session:
@@ -201,7 +205,7 @@ session:
 mailerService:
   host: "mailer"
   port: 50051
-  minDelay: '1m'
+  minDelay: "1m"
 
 database:
   type: "internal"

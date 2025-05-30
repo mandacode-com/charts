@@ -65,3 +65,19 @@ Service Account Name
 {{- default "default" .Values.core.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "app.core.oauth.secretName" }}
+{{- if .Values.core.oauth.existingSecret }}
+{{- .Values.core.oauth.existingSecret }}
+{{- else -}}
+{{ printf "%s-oauth-secret" .Release.Name }}
+{{- end }}
+{{- end }}
+
+{{- define "app.core.cookie.secretName" }}
+{{- if .Values.core.cookie.existingSecret }}
+{{- .Values.core.cookie.existingSecret }}
+{{- else -}}
+{{ printf "%s-core-cookie-secret" .Release.Name }}
+{{- end }}
+{{- end }}

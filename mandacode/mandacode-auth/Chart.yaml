@@ -2,10 +2,10 @@ apiVersion: v2
 name: mandacode-auth
 description: Mandacode Auth Service Helm Chart
 type: application
-version: 0.1.4
+version: 0.1.5
 dependencies:
   - name: mailer
     alias: mailer
-    version: 0.1.1
+    version: 0.1.3
     repository: "oci://registry.mandacode.com/mailer/charts"
     condition: mailer.enabled
